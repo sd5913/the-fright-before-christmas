@@ -6,11 +6,96 @@
 		<meta charset="utf-8" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
+		<title>The Fright Before Christmas</title>
+		<style>
+			:root {
+				--bg-color: #0f1117;
+				--card-bg: #181b24;
+				--text-color: #f3f4f6;
+				--text-muted: #9ca3af;
+				--accent: #e11d48;
+			}
+
+			* {
+				box-sizing: border-box;
+				margin: 0;
+				padding: 0;
+			}
+
+			body {
+				font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+				background-color: var(--bg-color);
+				color: var(--text-color);
+				min-height: 100vh;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				padding: 2rem 1rem;
+			}
+
+			header {
+				text-align: center;
+				margin-bottom: 2rem;
+			}
+
+			h1 {
+				font-size: 2.25rem;
+				font-weight: 800;
+				margin-bottom: 0.5rem;
+				letter-spacing: -0.025em;
+				color: var(--text-color);
+			}
+
+			p.subtitle {
+				color: var(--text-muted);
+				font-size: 1rem;
+			}
+
+			.game-wrapper {
+				background: var(--card-bg);
+				border-radius: 12px;
+				padding: 1rem;
+				box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+				max-width: 100%;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
+
+			.game-frame {
+				width: 960px;
+				height: 640px;
+				max-width: 100%;
+				aspect-ratio: 960 / 640;
+				border: none;
+				border-radius: 8px;
+				background-color: #000;
+			}
+
+			@media (max-width: 1024px) {
+				.game-frame {
+					width: 100%;
+					height: auto;
+				}
+			}
+		</style>
 	</head>
 	<body>
-		<h1>Astro</h1>
+		<header>
+			<h1>The Fright Before Christmas</h1>
+			<p class="subtitle">Play directly in your browser</p>
+		</header>
+
+		<main class="game-wrapper">
+			<iframe
+				class="game-frame"
+				src="/game/index.html"
+				title="The Fright Before Christmas WebGL Player"
+				allow="autoplay; fullscreen; gamepad; focus-without-user-activation *"
+			></iframe>
+		</main>
 	</body>
 </html>
+

@@ -93,6 +93,11 @@ InitTestScene*.unity*
 [Uu]nity/[Aa]ssets/[Ss]ceneDependencyCache*
 [Uu]nity/[Aa]ssets/Plugins/Editor/JetBrains*
 
+# Unity WebGL Build Artifacts (Keep large binaries out of git)
+public/game/Build/
+public/game/TemplateData/
+public/game/index.html
+
 # ==========================================
 # IDEs & System
 # ==========================================

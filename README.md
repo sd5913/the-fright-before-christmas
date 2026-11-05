@@ -14,4 +14,4 @@ Issue [#1](https://github.com/sd5913/the-fright-before-christmas/issues/1): Firs
   - Added placeholder 3d art.
  - Evidence:
 
-<img width="800" height="429" alt="ezgif-290a7c485be48dd5" src="https://github.com/user-attachments/assets/c41caeb6-3ca9-4c85-8ff6-fa3d2eae0d69" />
+<img width="400" height="214" alt="ezgif-290a7c485be48dd5" src="https://github.com/user-attachments/assets/c41caeb6-3ca9-4c85-8ff6-fa3d2eae0d69" />

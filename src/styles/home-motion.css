@@ -1,0 +1,71 @@
+.motion-toggle { display: inline-flex; align-items: center; gap: .6rem; min-height: 36px; padding: .45rem .8rem; border-radius: 30px; border: 1px solid #70536570; background: #211827; color: #e1c4d0; font-size: .65rem; cursor: pointer; }
+.motion-indicator { height: 6px; width: 6px; border-radius: 50%; background: #9c8098; }
+.motion-toggle[aria-pressed='true'] .motion-indicator { background: #f8c098; box-shadow: 0 0 8px #ffb27a70; }
+.stardust { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -2; pointer-events: none; opacity: .9; }
+.adventure[data-motion='off'] .stardust { visibility: hidden; }
+.adventure[data-motion='on'] .ufo { animation: ufo-float 7s ease-in-out infinite; }
+.adventure[data-motion='on'] .character img { animation: character-breathe 5s ease-in-out infinite; }
+.adventure[data-motion='on'] .character--mandy img { animation-duration: 6.2s; animation-delay: -2s; }
+.adventure[data-motion='on'] .fairy-light { animation: light-glow 3.6s ease-in-out var(--delay) infinite alternate; }
+.adventure[data-motion='on'] .nebula { animation: nebula-drift 32s ease-in-out infinite alternate; }
+.adventure[data-motion='on'] .star-field { animation: stars-drift 80s linear infinite alternate; }
+.adventure[data-motion='on'] .floor-glow { animation: light-glow 5s ease-in-out infinite alternate; }
+.adventure[data-motion='on'] .play-button::before { content: ''; position: absolute; inset: -100% -65%; pointer-events: none; background: linear-gradient(110deg, transparent 43%, #fff5ea70 50%, transparent 57%); transform: translateX(-70%); animation: button-shimmer 6s ease-in-out infinite; }
+.adventure[data-motion='on'] .play-button { animation: button-glow 4s ease-in-out infinite; }
+.adventure[data-motion='on'] .room-layer { transform: translate(calc(var(--pointer-x) * -5px), calc(var(--pointer-y) * -3px)); }
+.adventure[data-motion='on'] .sky-layer { transform: translate(calc(var(--pointer-x) * 5px), calc(var(--pointer-y) * 2px)); }
+.adventure[data-motion='on'] .character--billy { transform: translate(calc(var(--pointer-x) * 11px), calc(var(--pointer-y) * 4px)); }
+.adventure[data-motion='on'] .character--mandy { transform: translate(calc(var(--pointer-x) * 8px), calc(var(--pointer-y) * 3px)); }
+.adventure[data-motion='on'] .ufo-parallax { transform: translate(calc(var(--pointer-x) * -15px), calc(var(--pointer-y) * -6px)); }
+.adventure[data-motion='on'] .hero-content > .eyebrow,
+.adventure[data-motion='on'] .game-title,
+.adventure[data-motion='on'] .hero-tagline,
+.adventure[data-motion='on'] .play-note { animation: welcome-in .85s both; }
+.adventure[data-motion='on'] .game-title { animation-delay: .08s; }
+.adventure[data-motion='on'] .hero-tagline { animation-delay: .18s; }
+.adventure[data-motion='on'] .play-note { animation-delay: .28s; }
+.adventure[data-animating='false'] *, .adventure[data-animating='false'] *::before { animation-play-state: paused !important; }
+.hero-art { transition: opacity .4s ease, filter .4s ease; }
+.adventure[data-state='leaving'] .hero-art { opacity: 0; filter: blur(6px); pointer-events: none; }
+.adventure[data-state='loading'] .hero-art, .adventure[data-state='game'] .hero-art { visibility: hidden; pointer-events: none; opacity: 0; }
+.play-button { transition: transform .18s ease, filter .18s ease; }
+.play-button:hover:not(:disabled) { transform: translateY(-4px); filter: brightness(1.08); }
+.play-button:active:not(:disabled) { transform: translateY(4px) scale(.98); }
+.adventure[data-motion='off'] .play-button { transition: none; }
+.no-script { font-size: .8rem; padding: 1rem; background: #201428; border-radius: 12px; }
+.game-panel { position: absolute; inset: 0; display: flex; flex-direction: column; gap: .8rem; padding: 1.25rem clamp(.65rem, 3vw, 3rem); background: radial-gradient(ellipse at 50% 0%, #30203f, #120f19 70%); }
+.game-toolbar { max-width: 1100px; width: 100%; margin-inline: auto; display: flex; justify-content: space-between; align-items: center; gap: 1rem; min-height: 40px; }
+.game-toolbar-label { font-size: .65rem; color: #bc9db1; letter-spacing: .06em; }
+.text-button { display: inline-flex; align-items: center; justify-content: center; gap: .7rem; border: 1px solid #765063; background: #2b1c30; border-radius: 8px; color: #f4d1dd; font-size: .72rem; padding: .7rem 1rem; min-height: 42px; cursor: pointer; }
+.text-button:hover { background: #44283e; }
+.game-viewport { position: relative; flex: 1; width: 100%; max-width: 1100px; margin-inline: auto; min-height: 0; border: 1px solid #544059; border-radius: 12px; background: #17131d; overflow: hidden; box-shadow: 0 20px 70px #0004; }
+.game-mount { width: 100%; height: 100%; }
+.game-mount .game-frame { width: 100%; height: 100%; max-width: none; aspect-ratio: auto; }
+.entry-loading { position: absolute; inset: 0; background: #17131d; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 2rem; }
+.entry-loading p { font-size: 1rem; margin-bottom: .65rem; }
+.entry-loading > span:last-child { font-size: .7rem; color: #b09cad; }
+.loading-star { color: var(--pink); font-size: 2.5rem; }
+.adventure[data-motion='on'] .loading-star { animation: light-glow 1.8s ease-in-out infinite alternate; }
+.game-message { display: flex; justify-content: center; align-items: center; gap: 1rem; min-height: 46px; font-size: .7rem; line-height: 1.6; color: #c7aec1; text-align: center; }
+.game-message .text-button { flex-shrink: 0; }
+@keyframes welcome-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes ufo-float { 0%, 100% { transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-16px) rotate(4deg); } }
+@keyframes character-breathe { 0%, 100% { transform: scale(1) rotate(-.35deg); } 50% { transform: scale(1.012, 1.02) rotate(.45deg); } }
+@keyframes light-glow { from { opacity: .42; } to { opacity: .95; } }
+@keyframes nebula-drift { from { transform: translateX(-3%) scale(1); } to { transform: translateX(3%) scale(1.08); } }
+@keyframes stars-drift { from { transform: translate(0, 0); } to { transform: translate(22px, -12px); } }
+@keyframes button-shimmer { 0%, 65% { transform: translateX(-70%); } 90%, 100% { transform: translateX(70%); } }
+@keyframes button-glow { 0%, 100% { filter: drop-shadow(0 0 4px #f5a0c015); } 50% { filter: drop-shadow(0 0 16px #f5a0c04d); } }
+@media (max-width: 640px) {
+  .header-actions { gap: .8rem; }
+  .motion-toggle { font-size: .59rem; padding-inline: .6rem; gap: .4rem; }
+  .game-panel { padding: .6rem .4rem; }
+  .game-toolbar-label { display: none; }
+  .game-message { flex-wrap: wrap; gap: .5rem; padding-inline: .5rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .adventure *, .adventure *::before { animation: none !important; transition: none !important; }
+  .adventure .stardust { visibility: hidden; }
+  .adventure .room-layer, .adventure .sky-layer, .adventure .character, .adventure .ufo-parallax { transform: none !important; }
+  html { scroll-behavior: auto; }
+}

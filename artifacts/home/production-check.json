@@ -1,0 +1,11 @@
+{
+  "productionPreview": "http://127.0.0.1:4322",
+  "passed": true,
+  "checks": [
+    "Built JS initializes",
+    "No game requests before click",
+    "Single iframe after click",
+    "Return removes iframe",
+    "No homepage script errors"
+  ]
+}

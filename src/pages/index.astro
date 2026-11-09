@@ -1,5 +1,6 @@
 ---
 import '../styles/home.css';
+import '../styles/home-motion.css';
 const lights = [
   { x: 8, y: 24, color: 'warm' }, { x: 13, y: 29, color: 'pink' },
   { x: 19, y: 32, color: 'warm' }, { x: 24, y: 31, color: 'pink' },
@@ -26,6 +27,7 @@ const lights = [
       <a class="wordmark" href="/" aria-label="The Fright Before Christmas home">TFBC<span aria-hidden="true">✦</span></a>
       <nav class="header-actions" aria-label="Main navigation">
         <a class="how-to-link" href="#how-to-play">How to play <span aria-hidden="true">↗</span></a>
+        <button class="motion-toggle" id="motion-toggle" type="button" aria-pressed="false" aria-label="Animated effects" hidden><span class="motion-indicator" aria-hidden="true"></span><span>Effects <span id="motion-label">off</span></span></button>
       </nav>
     </header>
 
@@ -34,6 +36,7 @@ const lights = [
         <div class="hero-art" id="hero-art">
           <div class="room-layer" aria-hidden="true"></div>
           <div class="sky-layer" aria-hidden="true"><div class="nebula"></div><div class="star-field"></div></div>
+          <canvas class="stardust" id="stardust" aria-hidden="true"></canvas>
           <div class="scene-shade" aria-hidden="true"></div>
           <div class="light-string" aria-hidden="true">
             {lights.map((light, index) => <span class={`fairy-light fairy-light--${light.color}`} style={`--x:${light.x}%;--y:${light.y}%;--delay:${index * -0.7}s`}></span>)}
@@ -50,13 +53,21 @@ const lights = [
               <span class="logo-fallback" hidden>The Fright<br />Before Christmas</span>
             </h1>
             <p class="hero-tagline">Your Christmas just got a little stranger.</p>
-            <a class="play-button" id="play-button" href="#game-stage"><span>Play now</span><svg viewBox="0 0 24 24" width="25" height="25" fill="currentColor" aria-hidden="true"><path d="M7 3.5v17L21 12z" /></svg></a>
+            <button class="play-button" id="play-button" type="button" disabled><span id="play-label">Play now</span><svg viewBox="0 0 24 24" width="25" height="25" fill="currentColor" aria-hidden="true"><path d="M7 3.5v17L21 12z" /></svg></button>
             <p class="play-note">Free to play <span>·</span> No login <span>·</span> No download</p>
+            <noscript><p class="no-script">JavaScript is needed to start the game. Please enable it, then reload this page.</p></noscript>
           </div>
           <div class="scene-caption" aria-hidden="true"><span class="caption-line"></span><span>A spooky Christmas arcade adventure</span><span class="caption-line"></span></div>
         </div>
+        <section class="game-panel" id="game-panel" aria-label="Game player" hidden>
+          <div class="game-toolbar"><button class="text-button" id="back-button" type="button"><span aria-hidden="true">←</span> Back to homepage</button><span class="game-toolbar-label">The Fright Before Christmas</span></div>
+          <div class="game-viewport" id="game-viewport" aria-busy="false">
+            <div class="game-mount" id="game-mount"></div>
+            <div class="entry-loading" id="entry-loading" hidden><span class="loading-star" aria-hidden="true">✦</span><p>Opening your adventure…</p><span>Preparing the game window</span></div>
+          </div>
+          <div class="game-message" id="game-message" role="status" aria-live="polite"><span id="game-status"></span><button class="text-button" id="retry-button" type="button" hidden>Try again <span aria-hidden="true">↻</span></button></div>
+        </section>
       </section>
-      <section class="game-stage" id="game-stage" aria-label="Game player"><iframe class="game-frame" src="/game/index.html" title="The Fright Before Christmas WebGL Player" allow="autoplay; fullscreen; gamepad" allowfullscreen></iframe></section>
 
       <section class="field-notes" id="how-to-play" aria-labelledby="how-to-title">
         <div class="field-notes-heading"><span class="eyebrow">Before the adventure</span><h2 id="how-to-title">Make yourself at home.<br />Keep your eyes on the sky.</h2></div>
@@ -68,5 +79,8 @@ const lights = [
       </section>
     </main>
     <footer class="site-footer"><span>THE FRIGHT BEFORE CHRISTMAS</span><span>A little holiday mischief, right in your browser.</span><a href="#main-content">Back to top <span aria-hidden="true">↑</span></a></footer>
+    <script>
+      import '../scripts/home';
+    </script>
   </body>
 </html>

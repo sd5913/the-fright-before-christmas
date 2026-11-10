@@ -10,11 +10,9 @@ const loading = document.querySelector<HTMLElement>('#entry-loading');
 const statusElement = document.querySelector<HTMLElement>('#game-status');
 const retry = document.querySelector<HTMLButtonElement>('#retry-button');
 const back = document.querySelector<HTMLButtonElement>('#back-button');
-const toggle = document.querySelector<HTMLButtonElement>('#motion-toggle');
-const motionLabel = document.querySelector<HTMLElement>('#motion-label');
 const canvas = document.querySelector<HTMLCanvasElement>('#stardust');
 
-if (adventure && art && play && playLabel && panel && viewport && mount && loading && statusElement && retry && back && toggle && motionLabel && canvas) {
+if (adventure && art && play && playLabel && panel && viewport && mount && loading && statusElement && retry && back && canvas) {
   const scene = adventure;
   const heroArt = art;
   const playButton = play;
@@ -26,16 +24,20 @@ if (adventure && art && play && playLabel && panel && viewport && mount && loadi
   const gameStatus = statusElement;
   const retryButton = retry;
   const backButton = back;
-  const motionToggle = toggle;
-  const effectsLabel = motionLabel;
   const particleCanvas = canvas;
   const ctx = particleCanvas.getContext('2d');
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
   const narrowScreen = window.matchMedia('(max-width: 640px)');
-  const storageKey = 'tfbc-home-effects';
-  let preference = true;
-  try { preference = localStorage.getItem(storageKey) !== 'off'; } catch { /* Storage is optional. */ }
+  const characterImages = Array.from(heroArt.querySelectorAll<HTMLImageElement>('[data-idle-src]'));
+  for (const image of characterImages) {
+    image.addEventListener('error', () => {
+      if (image.getAttribute('src') !== image.dataset.idleSrc) return;
+      image.dataset.idleFailed = 'true';
+      image.dataset.characterState = 'fallback';
+      if (image.dataset.posterSrc) image.src = image.dataset.posterSrc;
+    });
+  }
 
   type State = 'home' | 'leaving' | 'loading' | 'game';
   type Particle = { x: number; y: number; size: number; speed: number; phase: number };
@@ -55,7 +57,7 @@ if (adventure && art && play && playLabel && panel && viewport && mount && loadi
   let transitionTimer: ReturnType<typeof setTimeout> | undefined;
   let entryTimer: ReturnType<typeof setTimeout> | undefined;
 
-  function motionEnabled() { return preference && !reduceMotion.matches; }
+  function motionEnabled() { return !reduceMotion.matches; }
   function shouldAnimate() { return motionEnabled() && state === 'home' && inView && !document.hidden; }
 
   function resizeParticles() {
@@ -109,11 +111,14 @@ if (adventure && art && play && playLabel && panel && viewport && mount && loadi
     const active = shouldAnimate();
     scene.dataset.motion = enabled ? 'on' : 'off';
     scene.dataset.animating = String(active);
-    motionToggle.setAttribute('aria-pressed', String(enabled));
-    // System reduced-motion always wins, including over a saved 'on' preference.
-    motionToggle.disabled = reduceMotion.matches;
-    motionToggle.title = reduceMotion.matches ? 'Effects are off because your device prefers reduced motion.' : 'Toggle animated effects';
-    effectsLabel.textContent = enabled ? 'on' : 'off';
+    // GIFs cannot be paused with animation-play-state. Replace them with their
+    // actual first frames while inactive; resume the same six-frame assets on return.
+    for (const image of characterImages) {
+      const playing = active && image.dataset.idleFailed !== 'true';
+      const source = playing ? image.dataset.idleSrc : image.dataset.posterSrc;
+      image.dataset.characterState = image.dataset.idleFailed === 'true' ? 'fallback' : playing ? 'playing' : 'paused';
+      if (source && image.getAttribute('src') !== source) image.src = source;
+    }
     if (active && !raf) { lastFrame = 0; raf = requestAnimationFrame(animate); }
     if (!active) {
       cancelAnimationFrame(raf);
@@ -223,11 +228,6 @@ if (adventure && art && play && playLabel && panel && viewport && mount && loadi
     setState('home');
     playButton.focus({ preventScroll: true });
   });
-  motionToggle.addEventListener('click', () => {
-    preference = !preference;
-    try { localStorage.setItem(storageKey, preference ? 'on' : 'off'); } catch { /* Continue without persistence. */ }
-    syncAnimation();
-  });
   heroArt.addEventListener('pointermove', (event: PointerEvent) => {
     if (!shouldAnimate() || !finePointer.matches || event.pointerType === 'touch') return;
     const rect = heroArt.getBoundingClientRect();
@@ -255,7 +255,6 @@ if (adventure && art && play && playLabel && panel && viewport && mount && loadi
   window.addEventListener('pageshow', (event) => {
     if (event.persisted) backButton.click();
   });
-  motionToggle.hidden = false;
   playButton.disabled = false;
   resizeParticles();
   syncAnimation();

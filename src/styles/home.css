@@ -39,10 +39,10 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
 .fairy-light { position: absolute; left: var(--x); top: var(--y); width: 7px; height: 9px; border-radius: 50%; background: #fff4bd; box-shadow: 0 0 9px 4px #ffb26190, 0 0 32px 12px #ffb26140; }
 .fairy-light--pink { background: #ffe2ef; box-shadow: 0 0 9px 4px #ff729e90, 0 0 32px 12px #ff729e40; }
 .floor-glow { position: absolute; inset: auto 13% 7%; height: 15%; z-index: -3; background: radial-gradient(ellipse, #ffae9f27, transparent 70%); pointer-events: none; }
-.character { position: absolute; z-index: -1; bottom: 8%; width: clamp(240px, 27.5vw, 430px); pointer-events: none; }
+.character { position: absolute; z-index: -1; bottom: 8%; width: clamp(230px, 26vw, 420px); pointer-events: none; }
 .character img { width: 100%; height: auto; display: block; transform-origin: 50% 94%; filter: drop-shadow(0 8px 14px #0d061840); }
 .character--billy { left: 3%; }
-.character--mandy { right: 3%; bottom: 8.5%; width: clamp(230px, 27vw, 425px); }
+.character--mandy { right: 3%; bottom: 8.5%; width: clamp(220px, 25vw, 390px); }
 .character-shadow { position: absolute; bottom: -1%; left: 12%; width: 70%; height: 6%; border-radius: 50%; background: #180a2470; filter: blur(8px); }
 .hero-content { position: relative; margin-inline: auto; padding-top: clamp(30px, 4vh, 50px); width: min(57%, 820px); text-align: center; }
 .eyebrow { display: block; margin: 0; text-transform: uppercase; letter-spacing: .23em; font-size: .66rem; font-weight: 700; color: #f5d6cc; }
@@ -54,8 +54,6 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
 .play-button { position: relative; display: inline-flex; justify-content: center; align-items: center; gap: 1.4rem; min-width: 290px; min-height: 77px; padding: 1.15rem 2.1rem; border: 1px solid #ffb9cc; border-radius: 22px; background: linear-gradient(150deg, #ffe0d4, #f7adbc 65%, #ed91b3); box-shadow: inset 0 3px 0 #fff3eaab, inset 0 -5px 0 #b74f7673, 0 0 0 6px #e67fa633, 0 10px 0 #53243c, 0 20px 40px #10091a70; font: 900 clamp(1.4rem, 2.4vw, 2rem)/1 'Arial Black', sans-serif; letter-spacing: .05em; color: var(--ink); text-decoration: none; text-transform: uppercase; cursor: pointer; overflow: hidden; }
 .play-button svg { flex: none; }
 .play-button:disabled { cursor: wait; }
-.play-note { margin: 1.7rem 0 0; font-size: .72rem; letter-spacing: .035em; color: #f1d7d0; text-shadow: 0 2px 8px #120b19; }
-.play-note span { margin-inline: .55rem; color: var(--pink); }
 .scene-caption { position: absolute; bottom: 2.4rem; left: 6%; right: 6%; display: flex; align-items: center; justify-content: center; gap: 1.8rem; color: #f4c8d3; text-transform: uppercase; font-size: .6rem; letter-spacing: .25em; text-align: center; }
 .caption-line { height: 1px; background: linear-gradient(90deg, transparent, #da879b70); flex: 1; max-width: 280px; }
 .caption-line:last-child { transform: rotate(180deg); }
@@ -82,8 +80,8 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
 @media (max-width: 1000px) {
   .hero-art { min-height: 700px; }
   .hero-content { width: 68%; padding-top: 50px; }
-  .character { bottom: 9%; width: 31%; left: 0; }
-  .character--mandy { right: 0; left: auto; bottom: 9.5%; width: 31%; }
+  .character { bottom: 9%; width: 29.5%; left: 0; }
+  .character--mandy { right: 0; left: auto; bottom: 9.5%; width: 28.5%; }
   .hero-tagline { margin-top: -.8rem; }
   .ufo-parallax { right: 2%; top: 2%; }
 }
@@ -99,10 +97,8 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
   .game-title { width: min(96%, 470px); margin: 3px auto 0; }
   .hero-tagline { margin: -.7rem 0 1.4rem; font-size: .82rem; }
   .play-button { min-width: 235px; min-height: 64px; border-radius: 18px; font-size: 1.3rem; gap: 1rem; }
-  .play-note { font-size: .62rem; margin-top: 1.65rem; }
-  .play-note span { margin-inline: .25rem; }
-  .character { width: 47%; bottom: 7%; left: -2.5%; max-width: 235px; }
-  .character--mandy { width: 46%; right: -1%; left: auto; bottom: 7.5%; }
+  .character { width: 45%; bottom: 7%; left: -2.5%; max-width: 235px; }
+  .character--mandy { width: 43%; right: -1%; left: auto; bottom: 7.5%; }
   .ufo-parallax { width: 105px; right: 0; top: 0; }
   .fairy-light { width: 5px; height: 6px; }
   .scene-shade { background: linear-gradient(0deg, #120d20c9, transparent 20%, #190e2810 70%); }

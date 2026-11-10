@@ -36,33 +36,39 @@ async function main() {
     assert.equal(gameRequests.length, 0);
     assert.equal(await page.locator('iframe').count(), 0);
     results.push('No game iframe or Unity requests before click');
+    assert.deepEqual(await page.locator('[data-idle-src]').evaluateAll(images => images.map(image => image.dataset.characterState)), ['playing', 'playing']);
+    assert.equal(await page.locator('[data-idle-src]').evaluateAll(images => images.every(image => image.getAttribute('src').endsWith('.gif'))), true);
+    results.push('Both selected six-frame character GIFs play on the homepage');
 
     await page.locator('#play-button').evaluate(button => { button.click(); button.click(); });
     await page.waitForFunction(() => document.querySelector('#adventure').dataset.state === 'game');
     assert.equal(await page.locator('iframe').count(), 1);
     assert.equal(gameRequests.filter(request => request.method === 'GET').length, 1);
     assert.equal(await page.locator('#adventure').getAttribute('data-animating'), 'false');
+    assert.deepEqual(await page.locator('[data-idle-src]').evaluateAll(images => images.map(image => image.dataset.characterState)), ['paused', 'paused']);
     assert.match(await page.locator('#game-status').textContent(), /loading progress/);
     results.push('Double click creates one iframe; shell load does not claim Unity ready; effects paused');
 
     await page.locator('#back-button').click();
     assert.equal(await page.locator('iframe').count(), 0);
     assert.equal(await page.locator('#adventure').getAttribute('data-state'), 'home');
+    assert.deepEqual(await page.locator('[data-idle-src]').evaluateAll(images => images.map(image => image.dataset.characterState)), ['playing', 'playing']);
     assert.equal(await page.locator('#play-button').evaluate(button => button === document.activeElement), true);
     results.push('Back unloads iframe, restores scene and returns keyboard focus');
 
-    await page.locator('#motion-toggle').click();
-    assert.equal(await page.locator('#adventure').getAttribute('data-motion'), 'off');
+    assert.equal(await page.locator('#motion-toggle').count(), 0);
+    assert.equal(await page.getByText('Free to play', { exact: false }).count(), 0);
+    await page.evaluate(() => localStorage.setItem('tfbc-home-effects', 'off'));
     await page.reload({ waitUntil: 'networkidle' });
-    assert.equal(await page.locator('#motion-toggle').getAttribute('aria-pressed'), 'false');
-    results.push('Effects preference persists after reload');
+    assert.equal(await page.locator('#adventure').getAttribute('data-motion'), 'on');
+    results.push('Promotional note and effects control removed; effects default on despite legacy saved preference');
 
-    await page.locator('#motion-toggle').click();
     await page.evaluate(() => {
       Object.defineProperty(document, 'hidden', { get: () => true, configurable: true });
       document.dispatchEvent(new Event('visibilitychange'));
     });
     assert.equal(await page.locator('#adventure').getAttribute('data-animating'), 'false');
+    assert.equal(await page.locator('[data-idle-src]').evaluateAll(images => images.every(image => image.getAttribute('src') === image.dataset.posterSrc)), true);
     await page.evaluate(() => { delete document.hidden; document.dispatchEvent(new Event('visibilitychange')); });
     assert.equal(await page.locator('#adventure').getAttribute('data-animating'), 'true');
     results.push('Hidden document pauses and visible document resumes effects');
@@ -101,9 +107,10 @@ async function main() {
     await reduced.emulateMedia({ reducedMotion: 'reduce' });
     await reduced.goto(base, { waitUntil: 'networkidle' });
     assert.equal(await reduced.locator('#adventure').getAttribute('data-motion'), 'off');
-    assert.equal(await reduced.locator('#motion-toggle').isDisabled(), true);
+    assert.equal(await reduced.locator('#motion-toggle').count(), 0);
+    assert.equal(await reduced.locator('[data-idle-src]').evaluateAll(images => images.every(image => image.dataset.characterState === 'paused' && image.getAttribute('src') === image.dataset.posterSrc)), true);
     assert.equal(await reduced.locator('#adventure').evaluate(scene => scene.getAnimations({ subtree: true }).filter(animation => animation.playState === 'running').length), 0);
-    results.push('System reduced motion overrides saved preference and stops scene animations');
+    results.push('System reduced motion still stops scene animations without a visible toggle');
     await reduced.close();
 
     const screenshotPage = await context.newPage();

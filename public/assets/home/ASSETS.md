@@ -1,5 +1,7 @@
 # Homepage artwork
 
+Update 2026-11-10: the homepage now uses `characters/billy-idle-v7.gif` from the newly generated `billy-v7` six-cell sheet, and `characters/mandy-idle.gif` from the original Mandy six-cell sheet. Billy plays source frames 1 through 6 once each in normal order; no reverse playback, copied endpoint or interpolation is used. Their poster WebPs are shown when animation is inactive. See `characters/manifest.json` for source sheets, filenames, playback order, timings and output dimensions. No non-uniform body scaling is performed during homepage integration.
+
 Created for Issues #10 and #14 on 2026-11-09 using the built-in imagegen tool, then encoded as WebP with sharp. The original Unity files were read as references and were not changed.
 
 | File | Use | Reference and generation brief |

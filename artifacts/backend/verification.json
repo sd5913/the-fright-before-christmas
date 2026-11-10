@@ -32,12 +32,14 @@
     "browserCrossOriginInvalidPost": true
   },
   "serverAcceptanceLog": {
-    "status": "pending_read_only_review"
+    "status": "not_verified",
+    "reason": "Read-only panel review could not load the page; no server pass count has been asserted."
   },
   "firstDatabaseBackup": {
     "status": "not_verified",
     "reason": "TinyFish stopped the combined backup and diagnostic run before it started.",
-    "runId": "b0c61e3c-33a1-4bb5-85d8-3109f0726528"
+    "runId": "b0c61e3c-33a1-4bb5-85d8-3109f0726528",
+    "createdFileConfirmed": false
   },
   "pendingIntegration": [
     "Partner Unity #9 score submission",
@@ -48,5 +50,10 @@
     "gameBuildFilesChanged": false,
     "frontendFilesChangedInTask12": false,
     "unityCallingCodeAdded": false
+  },
+  "panelReadOnlyReview": {
+    "status": "page_timeout",
+    "runId": "573e9d4a-7bfd-4a69-b831-ef52dd27a200",
+    "filesRead": false
   }
 }

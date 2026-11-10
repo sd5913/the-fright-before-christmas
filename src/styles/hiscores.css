@@ -18,8 +18,25 @@
 .hiscores-heading h1 em { font-family: Georgia, serif; font-weight: 400; color: #f0a7c6; letter-spacing: -.065em; }
 .title-star { position: absolute; right: -35px; top: -14px; font: 1.6rem/1 Georgia, serif; color: #f6d7aa; }
 .hiscores-intro { margin: 1.25rem 0 0; color: #c7b3c7; font-size: .8rem; line-height: 1.7; letter-spacing: .015em; }
-.hiscores-demo-badge { display: inline-flex; align-items: center; gap: .45rem; margin-top: 1.2rem; color: #d5bfce; font-size: .54rem; letter-spacing: .15em; text-transform: uppercase; }
-.hiscores-demo-badge > span { color: #ebb9d1; font-size: 1rem; }
+.hiscores-controls { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .5rem; margin-top: 1rem; }
+.scores-refresh { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 32px; min-width: 108px; padding: .45rem .8rem; border: 1px solid #d7a5be65; border-radius: 30px; background: #dfa2c00b; color: #f0c8dc; font: inherit; font-size: .66rem; cursor: pointer; }
+.scores-refresh:hover:not(:disabled) { background: #dfa2c01c; border-color: #f0bfd5b0; }
+.scores-refresh:disabled { cursor: wait; opacity: .65; }
+.scores-updated { font-size: .57rem; line-height: 1.3; color: #baa4bb; white-space: nowrap; }
+.hiscores-state-panel { min-height: 240px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; padding: 2rem 1rem; text-align: center; }
+.scores-state-star { color: #d8a6c4; font-size: 2rem; }
+.hiscores-state-panel h3 { max-width: 280px; margin: 0; color: #f1d7e4; font-size: 1.05rem; line-height: 1.5; font-weight: 500; }
+.hiscores-state-panel p { max-width: 270px; margin: 0; color: #bfa7bd; font-size: .75rem; line-height: 1.7; }
+.scores-state-link { margin-top: .3rem; color: #f0bfd5; font-size: .7rem; text-decoration: none; }
+.scores-state-link > span { margin-left: .5rem; }
+.podium-place[data-entry-state='vacant'] .podium-portrait,
+.podium-place[data-entry-state='waiting'] .podium-portrait { opacity: .45; }
+.podium-place[data-entry-state='vacant'] .podium-player-name { color: #b9a1b6; font-weight: 400; }
+.hiscores .podium-player-name { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; min-height: 2.8em; }
+.hiscores .hiscores-player-name { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+.hiscores .podium-score.is-long { flex-direction: column; align-items: center; gap: .35rem; font-size: clamp(1rem, 1.5vw, 1.6rem); }
+.hiscores .hiscores-table thead th:last-child { width: max(27%, 130px); }
+.hiscores-bottom #scores-feedback[data-tone='error'] { color: #f0b2c7; }
 .podium-stage { position: relative; max-width: 1000px; margin: 1rem auto 0; padding: 4rem 1.5rem 2rem; isolation: isolate; }
 .podium-spotlight { position: absolute; z-index: -1; left: 24%; right: 24%; top: -110px; height: 580px; opacity: .45; background: linear-gradient(180deg, #f8d4a200, #f8d4a20a 25%, #f8d4a224 77%, transparent); clip-path: polygon(46% 0, 54% 0, 100% 100%, 0 100%); filter: blur(12px); pointer-events: none; }
 .podium { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.17fr) minmax(0, 1fr); align-items: end; gap: 18px; list-style: none; margin: 0; padding: 0; }
@@ -51,7 +68,7 @@
 .podium-player-name { position: relative; z-index: 1; margin: .85rem 0 .8rem; font-size: clamp(.8rem, 1.35vw, 1.05rem); color: #f6e7ee; font-weight: 600; overflow-wrap: anywhere; line-height: 1.4; }
 .podium-score { position: relative; z-index: 1; display: flex; justify-content: center; align-items: baseline; gap: .4rem; margin: 0; color: var(--podium-color); font: 700 clamp(1.5rem, 3vw, 2.5rem)/1.15 'Consolas', 'SFMono-Regular', monospace; letter-spacing: -.045em; font-variant-numeric: tabular-nums; }
 .podium-place--1 .podium-score { font-size: clamp(2rem, 3.8vw, 3.2rem); text-shadow: 0 0 25px #f8d9a226; }
-.podium-score > span { font: 400 .5rem/1 'Trebuchet MS', sans-serif; letter-spacing: .12em; opacity: .7; }
+.podium-score > span:not([data-score-value]) { font: 400 .5rem/1 'Trebuchet MS', sans-serif; letter-spacing: .12em; opacity: .7; }
 .podium-rank-stamp { position: absolute; bottom: -.2rem; right: .6rem; font: 900 4rem/1 'Arial Black', sans-serif; letter-spacing: -.1em; color: rgba(var(--podium-rgb), .07); pointer-events: none; }
 .podium-place--1 .podium-rank-stamp { font-size: 5rem; color: #f4d5a012; }
 .podium-plinth-line { position: absolute; left: 28%; right: 28%; bottom: .85rem; height: 1px; background: linear-gradient(90deg, transparent, rgba(var(--podium-rgb), .5), transparent); }
@@ -108,7 +125,7 @@
   .hiscores-eyebrow { margin-bottom: 8px; font-size: .55rem; }
   .hiscores-heading h1 { font-size: clamp(42px, 7.2svh, 80px); }
   .hiscores-intro { margin-top: 9px; font-size: .75rem; }
-  .hiscores-demo-badge { position: absolute; right: 0; top: 0; margin: 0; }
+  .hiscores-controls { position: absolute; right: 0; top: 0; margin: 0; }
   .hiscores-content { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: clamp(24px, 3vw, 56px); align-items: center; }
   .podium-stage { --portrait-height: clamp(148px, calc(36svh - 80px), 290px); width: 100%; max-width: none; margin: 0; padding: 36px 0 12px; }
   .podium { gap: clamp(8px, 1vw, 16px); }
@@ -173,7 +190,7 @@
   .hiscores-eyebrow { margin-bottom: 8px; }
   .hiscores-heading h1 { font-size: clamp(36px, 6.5svh, 60px); }
   .hiscores-intro { margin-top: 8px; font-size: .7rem; }
-  .hiscores-demo-badge { position: absolute; right: 0; top: 0; margin: 0; font-size: .48rem; }
+  .hiscores-controls { position: absolute; right: 0; top: 0; margin: 0; }
   .podium-stage { --portrait-height: clamp(150px, 29svh, 210px); max-width: 720px; margin-top: 10px; padding: 32px 0 12px; }
   .podium-portrait { height: calc(var(--portrait-height) * .78); }
   .podium-portrait > img { height: calc(var(--portrait-height) * .8); width: 90%; }
@@ -198,7 +215,11 @@
   .hiscores-heading h1 { font-size: clamp(2.4rem, 10.5vw, 3.5rem); }
   .title-star { right: -17px; top: -13px; font-size: 1rem; }
   .hiscores-intro { font-size: .68rem; margin-top: 1rem; }
-  .hiscores-demo-badge { margin-top: .9rem; font-size: .48rem; }
+  .hiscores-controls { flex-direction: row; gap: .7rem; margin-top: .8rem; }
+  .scores-refresh { min-height: 29px; padding-block: .35rem; font-size: .6rem; }
+  .scores-updated { font-size: .52rem; }
+  .hiscores .podium-score.is-long { font-size: clamp(.6rem, 2.65vw, .9rem); }
+  .hiscores .hiscores-table thead th:last-child { width: 120px; }
   .leaderboard-moon { top: 165px; left: 10%; width: 80%; height: auto; aspect-ratio: 1; }
   .podium-stage { margin-top: .5rem; padding-top: 3.25rem; padding-bottom: 1rem; }
   .podium { gap: 7px; grid-template-columns: minmax(0, 1fr) minmax(0, 1.16fr) minmax(0, 1fr); }
@@ -220,7 +241,7 @@
   .podium-player-name { font-size: .62rem; min-height: 2.8em; display: flex; justify-content: center; align-items: center; margin: .5rem 0; line-height: 1.4; }
   .podium-score { flex-direction: column; align-items: center; gap: .3rem; font-size: clamp(1.15rem, 4.5vw, 1.5rem); }
   .podium-place--1 .podium-score { font-size: clamp(1.35rem, 5.1vw, 1.75rem); }
-  .podium-score > span { font-size: .4rem; }
+  .podium-score > span:not([data-score-value]) { font-size: .4rem; }
   .podium-rank-stamp { font-size: 2.5rem; right: .3rem; bottom: 0; }
   .podium-place--1 .podium-rank-stamp { font-size: 3rem; }
   .podium-plinth-line { bottom: .5rem; }

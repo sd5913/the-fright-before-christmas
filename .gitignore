@@ -11,6 +11,7 @@ dist/
 .env.local
 *.env
 *.env.*
+!.env.example
 
 # Package manager logs & caches
 npm-debug.log*

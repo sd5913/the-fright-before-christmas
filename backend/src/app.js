@@ -60,6 +60,8 @@ export function createApp({ config, store, logger = console }) {
     if (res.headersSent) return next(error);
     if (error.type === 'entity.parse.failed') error = new ApiError(400, 'INVALID_JSON', 'The request body is not valid JSON.');
     if (error.type === 'entity.too.large') error = new ApiError(413, 'BODY_TOO_LARGE', 'The JSON body must not exceed 8 KiB.');
+    if (error.type === 'charset.unsupported') error = new ApiError(415, 'UNSUPPORTED_CHARSET', 'Use a UTF-8 JSON body.');
+    if (error.type === 'encoding.unsupported') error = new ApiError(415, 'UNSUPPORTED_ENCODING', 'The request Content-Encoding is not supported.');
     if (error instanceof StorageError) {
       logger.error({ event: 'storage_error', code: error.cause?.code ?? 'UNKNOWN' });
       error = new ApiError(503, 'DATABASE_UNAVAILABLE', 'Score storage is temporarily unavailable. Please retry later.');

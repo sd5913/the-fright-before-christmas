@@ -1,0 +1,76 @@
+{
+  "beforeClickGameRequests": 0,
+  "initialized": true,
+  "iframeCountAfterBack": 0,
+  "status": "Follow the loading progress inside the game window. Click inside it to play.",
+  "requests": [
+    {
+      "method": "HEAD",
+      "path": "/game/index.html"
+    },
+    {
+      "method": "GET",
+      "path": "/game/index.html"
+    },
+    {
+      "method": "GET",
+      "path": "/game/TemplateData/style.css"
+    },
+    {
+      "method": "GET",
+      "path": "/game/Build/game.loader.js"
+    },
+    {
+      "method": "GET",
+      "path": "/game/TemplateData/unity-logo-dark.png"
+    },
+    {
+      "method": "GET",
+      "path": "/game/TemplateData/progress-bar-empty-dark.png"
+    },
+    {
+      "method": "GET",
+      "path": "/game/TemplateData/progress-bar-full-dark.png"
+    },
+    {
+      "method": "GET",
+      "path": "/game/TemplateData/unity-logo-title-footer.png"
+    },
+    {
+      "method": "GET",
+      "path": "/game/TemplateData/fullscreen-button.png"
+    },
+    {
+      "method": "GET",
+      "path": "/game/Build/game.framework.js"
+    },
+    {
+      "method": "GET",
+      "path": "/game/Build/game.data"
+    },
+    {
+      "method": "GET",
+      "path": "/game/Build/game.wasm"
+    }
+  ],
+  "logs": [
+    "[UnityMemory] Configuration Parameters - Can be set up in boot.config\n",
+    "Loading player data from data.unity3d\n",
+    "[Subsystems] Discovering subsystems at path UnitySubsystems\n",
+    "Creating WebGL 2.0 context.",
+    "Renderer: WebKit WebGL\n",
+    "Version:  OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium))\n",
+    " EXT_clip_control EXT_color_buffer_float EXT_color_buffer_half_float EXT_conservative_depth EXT_depth_clamp EXT_disjoint_timer_query_webgl2 EXT_float_blend EXT_polygon_offset_clamp EXT_render_snorm EXT_texture_compression_bptc EXT_texture_compression_rgtc EXT_texture_filter_anisotropic EXT_texture_mirror_clamp_to_edge EXT_texture_norm16 KHR_paralle",
+    "texture_compression_bptc GL_EXT_texture_compression_rgtc GL_EXT_texture_filter_anisotropic GL_EXT_texture_mirror_clamp_to_edge GL_EXT_texture_norm16 GL_KHR_parallel_shader_compile GL_NV_shader_noperspective_interpolation GL_OES_draw_buffers_indexed GL_OES_sample_variables GL_OES_shader_multisample_interpolation GL_OES_texture_float_linear GL_OVR_mu",
+    "WebGL: INVALID_ENUM: getInternalformatParameter: invalid internalformat",
+    "WebGL: INVALID_ENUM: getInternalformatParameter: invalid internalformat",
+    "WebGL: INVALID_ENUM: getInternalformatParameter: invalid internalformat",
+    "WebGL: INVALID_ENUM: getInternalformatParameter: invalid internalformat",
+    "WebGL: INVALID_ENUM: getInternalformatParameter: invalid internalformat",
+    "WebGL: INVALID_ENUM: getInternalformatParameter: invalid internalformat",
+    "ERROR: Shader ",
+    "ERROR: Shader ",
+    "ERROR: Shader "
+  ],
+  "note": "Real repository Unity build in headless Chrome using software WebGL; this verifies loading, not full gameplay."
+}

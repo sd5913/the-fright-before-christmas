@@ -1,0 +1,88 @@
+---
+import type { HiscoreEntry } from '../data/demo-hiscores';
+import '../styles/hiscores.css';
+
+interface Props {
+  entries: readonly HiscoreEntry[];
+}
+
+const { entries } = Astro.props;
+const leaders = [...entries].sort((a, b) => b.score - a.score).slice(0, 10);
+const formatScore = new Intl.NumberFormat('en-US');
+// Decorative game artwork for this preview, not player-selected avatars.
+const podiumArt = [
+  { src: '/assets/home/characters/mandy-poster.webp', width: 420, height: 508, title: 'Champion', motif: 'mandy' },
+  { src: '/assets/home/characters/billy-poster-v7.webp', width: 420, height: 498, title: 'Runner-up', motif: 'billy' },
+  { src: '/assets/home/ufo.webp', width: 800, height: 533, title: 'Third place', motif: 'ufo' },
+];
+---
+
+<section class="hiscores" aria-labelledby="hiscores-title" aria-describedby="hiscores-demo-note">
+  <div class="leaderboard-atmosphere" aria-hidden="true"><div class="leaderboard-stars"></div><div class="leaderboard-moon"></div></div>
+
+  <div class="hiscores-inner">
+    <div class="hiscores-heading">
+      <p class="hiscores-eyebrow"><span></span> The hall of fright <span></span></p>
+      <h1 id="hiscores-title">HIGH <em>SCORES</em><span class="title-star" aria-hidden="true">✦</span></h1>
+      <p class="hiscores-intro">Some save Christmas. Some make the leaderboard.</p>
+      <span class="hiscores-demo-badge"><span aria-hidden="true">✧</span> Sample scores</span>
+    </div>
+
+    <div class="hiscores-content">
+    <div class="podium-stage">
+      <div class="podium-spotlight" aria-hidden="true"></div>
+      <ol class="podium" aria-label="Top three players">
+        {leaders.slice(0, 3).map((entry, index) => {
+          const art = podiumArt[index];
+          return (
+            <li class={`podium-place podium-place--${index + 1}`} data-rank={index + 1}>
+              <article class="podium-entry" aria-label={`Rank ${index + 1}: ${entry.playerName}, ${formatScore.format(entry.score)} points`}>
+                <div class={`podium-portrait podium-portrait--${art.motif}`} aria-hidden="true">
+                  <span class="podium-halo"></span>
+                  <span class="podium-orbit"></span>
+                  {index === 0 && <svg class="podium-crown" width="68" height="58" viewBox="0 0 72 60" fill="none"><path d="m9 16 16 13L36 9l11 20 16-13-7 32H16L9 16Z" fill="url(#crown-gold)" stroke="#ffe7ad" stroke-width="1.5" /><path d="M20 54h32" stroke="#f8ce7b" stroke-width="3" stroke-linecap="round" /><circle cx="9" cy="12" r="4" fill="#ffe6a1" /><circle cx="36" cy="5" r="4" fill="#ffe6a1" /><circle cx="63" cy="12" r="4" fill="#ffe6a1" /><defs><linearGradient id="crown-gold" x1="36" y1="9" x2="36" y2="48" gradientUnits="userSpaceOnUse"><stop stop-color="#fff1c3" /><stop offset="1" stop-color="#cd8d42" /></linearGradient></defs></svg>}
+                  <span class="podium-spark podium-spark--one">✦</span><span class="podium-spark podium-spark--two">✧</span>
+                  <img src={art.src} width={art.width} height={art.height} alt="" fetchpriority={index === 0 ? 'high' : 'auto'} draggable="false" />
+                </div>
+                <div class="podium-plinth">
+                  <div class="podium-deck" aria-hidden="true"></div>
+                  <span class="podium-position"><span aria-hidden="true">✦</span> {art.title}</span>
+                  <span class="hiscores-sr-only">Rank {index + 1}</span>
+                  <h2 class="podium-player-name">{entry.playerName}</h2>
+                  <p class="podium-score" data-score={entry.score}>{formatScore.format(entry.score)}<span>PTS</span></p>
+                  <span class="podium-rank-stamp" aria-hidden="true">0{index + 1}</span>
+                  <span class="podium-plinth-line" aria-hidden="true"></span>
+                </div>
+              </article>
+            </li>
+          );
+        })}
+      </ol>
+      <div class="podium-floor" aria-hidden="true"></div>
+    </div>
+
+    <div class="hiscores-board">
+      <div class="hiscores-board-heading">
+        <div><span class="hiscores-section-number" aria-hidden="true">04—10</span><h2>The rest of the legends</h2></div>
+        <span class="hiscores-top-label">The nice(ish) list <span aria-hidden="true">✦</span></span>
+      </div>
+      <table class="hiscores-table">
+        <caption class="hiscores-sr-only">Ranks four to ten, using sample scores. The top three players are on the podium above.</caption>
+        <thead><tr><th scope="col">Rank</th><th scope="col">Player</th><th scope="col" class="hiscores-score">Score</th></tr></thead>
+        <tbody>
+          {leaders.slice(3).map((entry, index) => (
+            <tr data-rank={index + 4}>
+              <td><span class="hiscores-rank">{String(index + 4).padStart(2, '0')}</span></td>
+              <th scope="row"><span class="hiscores-player"><span class="hiscores-avatar" aria-hidden="true">{entry.playerName.slice(0, 1)}</span><span class="hiscores-player-name">{entry.playerName}</span></span></th>
+              <td class="hiscores-score" data-score={entry.score}>{formatScore.format(entry.score)}<span class="hiscores-points-unit" aria-hidden="true">PTS</span></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    </div>
+
+    <div class="hiscores-bottom"><p id="hiscores-demo-note"><span aria-hidden="true">✧</span> Preview only. Sample scores, not saved game results.</p><a href="/">Your next adventure awaits <span aria-hidden="true">↗</span></a></div>
+  </div>
+</section>

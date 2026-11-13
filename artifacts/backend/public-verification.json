@@ -1,0 +1,81 @@
+{
+  "date": "2026-11-11",
+  "baseUrl": "https://metapool.cloud/tfbc-api",
+  "checks": [
+    {
+      "name": "database health",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "allowOrigin": null,
+      "cacheControl": "no-store",
+      "body": {
+        "status": "ok",
+        "database": "ok"
+      }
+    },
+    {
+      "name": "empty production board",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "allowOrigin": "https://tfbc.darketomaly.com",
+      "cacheControl": "no-store",
+      "body": {
+        "scores": [],
+        "limit": 10
+      }
+    },
+    {
+      "name": "JSON POST preflight",
+      "status": 204,
+      "contentType": null,
+      "allowOrigin": "https://tfbc.darketomaly.com",
+      "cacheControl": "no-store",
+      "body": null
+    },
+    {
+      "name": "POST validation without inserting a score",
+      "status": 400,
+      "contentType": "application/json; charset=utf-8",
+      "allowOrigin": "https://tfbc.darketomaly.com",
+      "cacheControl": "no-store",
+      "body": {
+        "error": {
+          "code": "INVALID_RUN_ID",
+          "message": "runId must be a UUID generated once per game run."
+        }
+      }
+    },
+    {
+      "name": "unknown origin denied",
+      "status": 403,
+      "contentType": "application/json; charset=utf-8",
+      "allowOrigin": null,
+      "cacheControl": "no-store",
+      "body": {
+        "error": {
+          "code": "ORIGIN_NOT_ALLOWED",
+          "message": "This website origin is not allowed."
+        }
+      }
+    }
+  ],
+  "browser": {
+    "origin": "http://localhost:4321",
+    "get": {
+      "status": 200,
+      "body": {
+        "scores": [],
+        "limit": 10
+      }
+    },
+    "invalidPost": {
+      "status": 400,
+      "body": {
+        "error": {
+          "code": "INVALID_RUN_ID",
+          "message": "runId must be a UUID generated once per game run."
+        }
+      }
+    }
+  }
+}

@@ -1,15 +1,12 @@
 ---
-import type { HiscoreEntry } from '../data/demo-hiscores';
 import '../styles/hiscores.css';
 
 interface Props {
-  entries: readonly HiscoreEntry[];
+  apiBaseUrl: string;
 }
 
-const { entries } = Astro.props;
-const leaders = [...entries].sort((a, b) => b.score - a.score).slice(0, 10);
-const formatScore = new Intl.NumberFormat('en-US');
-// Decorative game artwork for this preview, not player-selected avatars.
+const { apiBaseUrl } = Astro.props;
+// The illustrations decorate podium positions, not player-selected avatars.
 const podiumArt = [
   { src: '/assets/home/characters/mandy-poster.webp', width: 420, height: 508, title: 'Champion', motif: 'mandy' },
   { src: '/assets/home/characters/billy-poster-v7.webp', width: 420, height: 498, title: 'Runner-up', motif: 'billy' },
@@ -17,7 +14,7 @@ const podiumArt = [
 ];
 ---
 
-<section class="hiscores" aria-labelledby="hiscores-title" aria-describedby="hiscores-demo-note">
+<section class="hiscores" data-live-hiscores data-api-base-url={apiBaseUrl} data-state="idle" aria-labelledby="hiscores-title" aria-describedby="scores-feedback" aria-busy="false">
   <div class="leaderboard-atmosphere" aria-hidden="true"><div class="leaderboard-stars"></div><div class="leaderboard-moon"></div></div>
 
   <div class="hiscores-inner">
@@ -25,18 +22,20 @@ const podiumArt = [
       <p class="hiscores-eyebrow"><span></span> The hall of fright <span></span></p>
       <h1 id="hiscores-title">HIGH <em>SCORES</em><span class="title-star" aria-hidden="true">✦</span></h1>
       <p class="hiscores-intro">Some save Christmas. Some make the leaderboard.</p>
-      <span class="hiscores-demo-badge"><span aria-hidden="true">✧</span> Sample scores</span>
+      <div class="hiscores-controls">
+        <button class="scores-refresh" id="scores-refresh" type="button" disabled><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5" /><path d="M5.2 7a8 8 0 0 1 13-1L20 8M4 16l1.8 2a8 8 0 0 0 13-1" /></svg><span id="scores-refresh-label">Refresh</span></button>
+        <time id="scores-updated" class="scores-updated" hidden></time>
+      </div>
     </div>
 
     <div class="hiscores-content">
     <div class="podium-stage">
       <div class="podium-spotlight" aria-hidden="true"></div>
-      <ol class="podium" aria-label="Top three players">
-        {leaders.slice(0, 3).map((entry, index) => {
-          const art = podiumArt[index];
+      <ol class="podium" aria-label="Top three podium places">
+        {podiumArt.map((art, index) => {
           return (
-            <li class={`podium-place podium-place--${index + 1}`} data-rank={index + 1}>
-              <article class="podium-entry" aria-label={`Rank ${index + 1}: ${entry.playerName}, ${formatScore.format(entry.score)} points`}>
+            <li class={`podium-place podium-place--${index + 1}`} data-podium-rank={index + 1} data-entry-state="waiting">
+              <article class="podium-entry" aria-label={`${art.title} — waiting for results`}>
                 <div class={`podium-portrait podium-portrait--${art.motif}`} aria-hidden="true">
                   <span class="podium-halo"></span>
                   <span class="podium-orbit"></span>
@@ -48,8 +47,8 @@ const podiumArt = [
                   <div class="podium-deck" aria-hidden="true"></div>
                   <span class="podium-position"><span aria-hidden="true">✦</span> {art.title}</span>
                   <span class="hiscores-sr-only">Rank {index + 1}</span>
-                  <h2 class="podium-player-name">{entry.playerName}</h2>
-                  <p class="podium-score" data-score={entry.score}>{formatScore.format(entry.score)}<span>PTS</span></p>
+                  <h2 class="podium-player-name" data-player-name>—</h2>
+                  <p class="podium-score"><span data-score-value>—</span><span>PTS</span></p>
                   <span class="podium-rank-stamp" aria-hidden="true">0{index + 1}</span>
                   <span class="podium-plinth-line" aria-hidden="true"></span>
                 </div>
@@ -66,23 +65,26 @@ const podiumArt = [
         <div><span class="hiscores-section-number" aria-hidden="true">04—10</span><h2>The rest of the legends</h2></div>
         <span class="hiscores-top-label">The nice(ish) list <span aria-hidden="true">✦</span></span>
       </div>
-      <table class="hiscores-table">
-        <caption class="hiscores-sr-only">Ranks four to ten, using sample scores. The top three players are on the podium above.</caption>
+      <table class="hiscores-table" id="scores-table" hidden>
+        <caption class="hiscores-sr-only">High scores from fourth to tenth place. The top three players are on the podium.</caption>
         <thead><tr><th scope="col">Rank</th><th scope="col">Player</th><th scope="col" class="hiscores-score">Score</th></tr></thead>
-        <tbody>
-          {leaders.slice(3).map((entry, index) => (
-            <tr data-rank={index + 4}>
-              <td><span class="hiscores-rank">{String(index + 4).padStart(2, '0')}</span></td>
-              <th scope="row"><span class="hiscores-player"><span class="hiscores-avatar" aria-hidden="true">{entry.playerName.slice(0, 1)}</span><span class="hiscores-player-name">{entry.playerName}</span></span></th>
-              <td class="hiscores-score" data-score={entry.score}>{formatScore.format(entry.score)}<span class="hiscores-points-unit" aria-hidden="true">PTS</span></td>
-            </tr>
-          ))}
-        </tbody>
+        <tbody id="scores-rows"></tbody>
       </table>
+      <template id="score-row-template"><tr><td><span class="hiscores-rank" data-cell-rank></span></td><th scope="row"><span class="hiscores-player"><span class="hiscores-avatar" aria-hidden="true"></span><span class="hiscores-player-name"></span></span></th><td class="hiscores-score"><span data-cell-score></span><span class="hiscores-points-unit" aria-hidden="true">PTS</span></td></tr></template>
+      <div class="hiscores-state-panel" id="scores-state-panel">
+        <span class="scores-state-star" aria-hidden="true">✧</span>
+        <h3 id="scores-state-heading">Your place in the stars.</h3>
+        <p id="scores-state-description">Enable JavaScript to load high scores.</p>
+        <button class="scores-refresh" id="scores-retry" type="button" hidden>Try again <span aria-hidden="true">↻</span></button>
+        <a class="scores-state-link" id="scores-adventure" href="/" hidden>Back to the adventure <span aria-hidden="true">↗</span></a>
+      </div>
     </div>
 
     </div>
 
-    <div class="hiscores-bottom"><p id="hiscores-demo-note"><span aria-hidden="true">✧</span> Preview only. Sample scores, not saved game results.</p><a href="/">Your next adventure awaits <span aria-hidden="true">↗</span></a></div>
+    <div class="hiscores-bottom"><p id="scores-feedback" role="status" aria-live="polite"></p><a href="/">Your next adventure awaits <span aria-hidden="true">↗</span></a></div>
   </div>
 </section>
+<script>
+  import '../scripts/leaderboard';
+</script>

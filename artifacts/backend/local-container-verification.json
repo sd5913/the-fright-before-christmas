@@ -1,0 +1,8 @@
+{
+  "date": "2026-11-11",
+  "scope": "Local full production Compose configuration; no public score submitted",
+  "databasePersistenceAcrossApiRecreation": true,
+  "idempotencyAfterRecreation": true,
+  "apiMemoryLimitMiB": 160,
+  "databaseMemoryLimitMiB": 128
+}

@@ -1,0 +1,65 @@
+name: tfbc-scores
+
+services:
+  db:
+    image: postgres:17-bookworm
+    restart: unless-stopped
+    mem_limit: 128m
+    cpus: 0.5
+    command: [postgres, -c, shared_buffers=16MB, -c, max_connections=20, -c, work_mem=1MB, -c, maintenance_work_mem=16MB]
+    environment:
+      POSTGRES_USER: tfbc
+      POSTGRES_DB: tfbc
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in backend/.env}
+    volumes:
+      - score-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U tfbc -d tfbc']
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    networks: [database]
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: '3'
+
+  api:
+    build: .
+    restart: unless-stopped
+    mem_limit: 160m
+    cpus: 0.5
+    init: true
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      NODE_OPTIONS: --max-old-space-size=96
+      DATABASE_URL: postgresql://tfbc:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in backend/.env}@db:5432/tfbc
+      PORT: '3000'
+      API_BASE_PATH: /tfbc-api
+      CORS_ORIGINS: ${CORS_ORIGINS:-https://tfbc.darketomaly.com,https://metapool.cloud,http://localhost:4321,http://127.0.0.1:4321}
+      TRUST_PROXY: '1'
+      READ_RATE_LIMIT: ${READ_RATE_LIMIT:-300}
+      WRITE_RATE_LIMIT: ${WRITE_RATE_LIMIT:-20}
+      RATE_WINDOW_MS: ${RATE_WINDOW_MS:-60000}
+    ports:
+      - '127.0.0.1:${API_HOST_PORT:-3107}:3000'
+    networks: [database, outbound]
+    security_opt: [no-new-privileges:true]
+    cap_drop: [ALL]
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: '3'
+
+networks:
+  database:
+    internal: true
+  outbound:
+
+volumes:
+  score-data:

@@ -1,0 +1,59 @@
+{
+  "date": "2026-11-11",
+  "task": 12,
+  "branch": "TFBC-12-backend-hiscore-api",
+  "deployment": {
+    "status": "deployed",
+    "baseUrl": "https://metapool.cloud/tfbc-api",
+    "serverPath": "/opt/tfbc/backend",
+    "apiLoopbackPort": 3107,
+    "databasePublicPort": false,
+    "sourceArchiveSha256": "ba77fc73d8e1c9ea0b3138d0fe1d55c1afd7b1d10643a31d50bdd9efb980d26c",
+    "existingHomepage": "Merry Christmas - Interactive Particle Tree"
+  },
+  "localChecks": {
+    "syntax": "passed",
+    "unitTests": {
+      "passed": 4,
+      "failed": 0
+    },
+    "postgresqlIntegration": {
+      "passed": 9,
+      "failed": 0
+    },
+    "containerRecreationPersistence": true,
+    "idempotencyAfterRecreation": true
+  },
+  "publicChecks": {
+    "httpChecks": 5,
+    "healthy": true,
+    "emptyLeaderboard": true,
+    "browserCrossOriginRead": true,
+    "browserCrossOriginInvalidPost": true
+  },
+  "serverAcceptanceLog": {
+    "status": "not_verified",
+    "reason": "Read-only panel review could not load the page; no server pass count has been asserted."
+  },
+  "firstDatabaseBackup": {
+    "status": "not_verified",
+    "reason": "TinyFish stopped the combined backup and diagnostic run before it started.",
+    "runId": "b0c61e3c-33a1-4bb5-85d8-3109f0726528",
+    "createdFileConfirmed": false
+  },
+  "pendingIntegration": [
+    "Partner Unity #9 score submission",
+    "Frontend #13 real leaderboard data"
+  ],
+  "scope": {
+    "unityFilesChanged": false,
+    "gameBuildFilesChanged": false,
+    "frontendFilesChangedInTask12": false,
+    "unityCallingCodeAdded": false
+  },
+  "panelReadOnlyReview": {
+    "status": "page_timeout",
+    "runId": "573e9d4a-7bfd-4a69-b831-ef52dd27a200",
+    "filesRead": false
+  }
+}

@@ -7,6 +7,13 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
+    "com.darketomaly.framework.core": {
+      "version": "https://github.com/darketomaly/framework-core.git?path=/Assets/com.darketomaly.framework.core",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "5f7f1206881d4c5da80db7ac82d1fab4af1fe62a"
+    },
     "com.unity.ai.navigation": {
       "version": "2.0.14",
       "depth": 0,

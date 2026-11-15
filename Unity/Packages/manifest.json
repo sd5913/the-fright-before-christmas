@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.darketomaly.framework.core": "https://github.com/darketomaly/framework-core.git?path=/Assets/com.darketomaly.framework.core",
     "com.unity.ai.navigation": "2.0.14",
     "com.unity.animation.rigging": "1.4.1",
     "com.unity.collab-proxy": "2.13.6",

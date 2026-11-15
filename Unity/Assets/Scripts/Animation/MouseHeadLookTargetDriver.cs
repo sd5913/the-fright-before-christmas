@@ -6,6 +6,12 @@ using UnityEngine.InputSystem;
 [DisallowMultipleComponent]
 public class MouseHeadLookTargetDriver : MonoBehaviour
 {
+    private enum TargetingMode
+    {
+        ScreenSpaceFrontFacing,
+        WorldRaycast
+    }
+
     [Header("References")]
     [SerializeField] private Camera sourceCamera;
     [SerializeField] private Transform characterRoot;
@@ -18,6 +24,10 @@ public class MouseHeadLookTargetDriver : MonoBehaviour
     [SerializeField] private float lookDistance = 2f;
 
     [Header("Targeting")]
+    [SerializeField] private TargetingMode targetingMode = TargetingMode.ScreenSpaceFrontFacing;
+    [SerializeField] private float horizontalScreenRange = 0.45f;
+    [SerializeField] private float verticalScreenRange = 0.45f;
+    [SerializeField] private bool invertHorizontal = true;
     [SerializeField] private bool raycastToWorld = true;
     [SerializeField] private LayerMask raycastMask = ~0;
     [SerializeField] private float raycastMaxDistance = 100f;
@@ -46,9 +56,17 @@ public class MouseHeadLookTargetDriver : MonoBehaviour
             return;
         }
 
-        var mouseRay = activeCamera.ScreenPointToRay(mousePosition);
-        var desiredPoint = ResolveDesiredLookPoint(mouseRay);
-        var clampedTargetPoint = BuildClampedTargetPoint(desiredPoint);
+        Vector3 clampedTargetPoint;
+        if (targetingMode == TargetingMode.ScreenSpaceFrontFacing)
+        {
+            clampedTargetPoint = BuildFrontFacingTargetPoint(activeCamera, mousePosition);
+        }
+        else
+        {
+            var mouseRay = activeCamera.ScreenPointToRay(mousePosition);
+            var desiredPoint = ResolveDesiredLookPoint(mouseRay);
+            clampedTargetPoint = BuildClampedTargetPoint(desiredPoint);
+        }
 
         if (smoothTime <= 0f)
         {
@@ -109,8 +127,33 @@ public class MouseHeadLookTargetDriver : MonoBehaviour
         return headPivot.position + clampedWorldDirection * Mathf.Max(0.1f, lookDistance);
     }
 
+    private Vector3 BuildFrontFacingTargetPoint(Camera activeCamera, Vector2 mousePosition)
+    {
+        var viewport = activeCamera.ScreenToViewportPoint(mousePosition);
+        var horizontal = Mathf.Clamp((viewport.x - 0.5f) / Mathf.Max(0.01f, horizontalScreenRange), -1f, 1f);
+        var vertical = Mathf.Clamp((viewport.y - 0.5f) / Mathf.Max(0.01f, verticalScreenRange), -1f, 1f);
+        if (invertHorizontal)
+        {
+            horizontal = -horizontal;
+        }
+
+        var yaw = horizontal >= 0f
+            ? Mathf.Lerp(0f, yawLimits.y, horizontal)
+            : Mathf.Lerp(0f, yawLimits.x, -horizontal);
+
+        var pitch = vertical >= 0f
+            ? Mathf.Lerp(0f, pitchLimits.x, vertical)
+            : Mathf.Lerp(0f, pitchLimits.y, -vertical);
+
+        var localRotation = Quaternion.Euler(pitch, yaw, 0f);
+        var worldDirection = characterRoot.TransformDirection(localRotation * Vector3.forward);
+        return headPivot.position + worldDirection * Mathf.Max(0.1f, lookDistance);
+    }
+
     private void OnValidate()
     {
+        horizontalScreenRange = Mathf.Clamp(horizontalScreenRange, 0.01f, 0.5f);
+        verticalScreenRange = Mathf.Clamp(verticalScreenRange, 0.01f, 0.5f);
         raycastMaxDistance = Mathf.Max(0.1f, raycastMaxDistance);
         fallbackPlaneForwardOffset = Mathf.Max(0.1f, fallbackPlaneForwardOffset);
         lookDistance = Mathf.Max(0.1f, lookDistance);

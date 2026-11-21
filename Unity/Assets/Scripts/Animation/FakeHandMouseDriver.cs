@@ -22,6 +22,10 @@ public class FakeHandMouseDriver : MonoBehaviour
     [Header("Smoothing")]
     [SerializeField] private float smoothTime = 0.04f;
 
+    [Header("Local Limits")]
+    [SerializeField] private bool clampMinLocalY = true;
+    [SerializeField] private float minLocalY;
+
     private Vector3 _velocity;
 
     private void LateUpdate()
@@ -52,11 +56,25 @@ public class FakeHandMouseDriver : MonoBehaviour
         var y = Vector3.Dot(delta, activeCamera.transform.up);
 
         var clamped = ClampToVerticalCapsule(x, y, capsuleRadius, capsuleHalfHeight);
+        var depthScale = 1f;
+        if (Mathf.Abs(cameraForwardOffset) > 0f)
+        {
+            var depth = anchorScreen.z;
+            var offsetDepth = Mathf.Max(0.001f, depth + cameraForwardOffset);
+            depthScale = offsetDepth / Mathf.Max(depth, 0.001f);
+        }
+
         var targetPosition =
             anchorPosition +
-            activeCamera.transform.right * clamped.x +
-            activeCamera.transform.up * clamped.y +
+            activeCamera.transform.right * (clamped.x * depthScale) +
+            activeCamera.transform.up * (clamped.y * depthScale) +
             activeCamera.transform.forward * cameraForwardOffset;
+        if (clampMinLocalY)
+        {
+            var localTarget = characterRoot.InverseTransformPoint(targetPosition);
+            localTarget.y = Mathf.Max(localTarget.y, minLocalY);
+            targetPosition = characterRoot.TransformPoint(localTarget);
+        }
 
         if (smoothTime <= 0f)
         {

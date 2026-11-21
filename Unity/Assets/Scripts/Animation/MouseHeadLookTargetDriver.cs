@@ -1,7 +1,4 @@
 using UnityEngine;
-#if ENABLE_INPUT_SYSTEM
-using UnityEngine.InputSystem;
-#endif
 
 [DisallowMultipleComponent]
 public class MouseHeadLookTargetDriver : MonoBehaviour
@@ -51,7 +48,7 @@ public class MouseHeadLookTargetDriver : MonoBehaviour
             return;
         }
 
-        if (!TryGetMousePosition(out var mousePosition))
+        if (!MouseInputManager.TryGetMousePosition(out var mousePosition))
         {
             return;
         }
@@ -160,22 +157,4 @@ public class MouseHeadLookTargetDriver : MonoBehaviour
         smoothTime = Mathf.Max(0f, smoothTime);
     }
 
-    private static bool TryGetMousePosition(out Vector2 mousePosition)
-    {
-#if ENABLE_INPUT_SYSTEM
-        if (Mouse.current != null)
-        {
-            mousePosition = Mouse.current.position.ReadValue();
-            return true;
-        }
-#endif
-
-#if ENABLE_LEGACY_INPUT_MANAGER
-        mousePosition = Input.mousePosition;
-        return true;
-#else
-        mousePosition = default;
-        return false;
-#endif
-    }
 }

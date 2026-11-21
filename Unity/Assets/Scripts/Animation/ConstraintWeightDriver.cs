@@ -1,8 +1,5 @@
 using System.Reflection;
 using UnityEngine;
-#if ENABLE_INPUT_SYSTEM
-using UnityEngine.InputSystem;
-#endif
 
 [DisallowMultipleComponent]
 public class ConstraintWeightDriver : MonoBehaviour
@@ -41,12 +38,7 @@ public class ConstraintWeightDriver : MonoBehaviour
 
     private bool IsMouseInsideGameView()
     {
-        if (!TryGetMousePosition(out var mouse))
-        {
-            return false;
-        }
-
-        return mouse.x >= 0f && mouse.x <= Screen.width && mouse.y >= 0f && mouse.y <= Screen.height;
+        return MouseInputManager.IsMouseInsideGameView();
     }
 
     private void ResolveWeightMember()
@@ -107,22 +99,4 @@ public class ConstraintWeightDriver : MonoBehaviour
         ResolveWeightMember();
     }
 
-    private static bool TryGetMousePosition(out Vector2 mousePosition)
-    {
-#if ENABLE_INPUT_SYSTEM
-        if (Mouse.current != null)
-        {
-            mousePosition = Mouse.current.position.ReadValue();
-            return true;
-        }
-#endif
-
-#if ENABLE_LEGACY_INPUT_MANAGER
-        mousePosition = Input.mousePosition;
-        return true;
-#else
-        mousePosition = default;
-        return false;
-#endif
-    }
 }

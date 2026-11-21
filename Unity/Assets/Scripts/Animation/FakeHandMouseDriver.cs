@@ -1,7 +1,4 @@
 using UnityEngine;
-#if ENABLE_INPUT_SYSTEM
-using UnityEngine.InputSystem;
-#endif
 
 [DisallowMultipleComponent]
 public class FakeHandMouseDriver : MonoBehaviour
@@ -36,7 +33,7 @@ public class FakeHandMouseDriver : MonoBehaviour
         }
 
         var activeCamera = sourceCamera != null ? sourceCamera : Camera.main;
-        if (activeCamera == null || !TryGetMousePosition(out var mousePosition))
+        if (activeCamera == null || !MouseInputManager.TryGetMousePosition(out var mousePosition))
         {
             return;
         }
@@ -135,22 +132,4 @@ public class FakeHandMouseDriver : MonoBehaviour
         smoothTime = Mathf.Max(0f, smoothTime);
     }
 
-    private static bool TryGetMousePosition(out Vector2 mousePosition)
-    {
-#if ENABLE_INPUT_SYSTEM
-        if (Mouse.current != null)
-        {
-            mousePosition = Mouse.current.position.ReadValue();
-            return true;
-        }
-#endif
-
-#if ENABLE_LEGACY_INPUT_MANAGER
-        mousePosition = Input.mousePosition;
-        return true;
-#else
-        mousePosition = default;
-        return false;
-#endif
-    }
 }

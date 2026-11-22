@@ -28,13 +28,34 @@ public class CameraFeedback : Singleton<CameraFeedback>
     [SerializeField] private float followLerpSpeed = 8f;
     [SerializeField] private float followXOffset;
 
+    [Header("Intro Movement")]
+    [SerializeField] private bool playIntroMovement = true;
+    [SerializeField] private float introStartDelay = 1f;
+    [SerializeField] private float introLength = 1.25f;
+    [SerializeField] private float introDuration = 0.75f;
+    [SerializeField] private AnimationCurve introEase = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
+
     private readonly List<ActiveShake> _activeShakes = new List<ActiveShake>();
     private Vector3 _lastPositionOffset;
     private Vector3 _lastRotationOffset;
+    private Vector3 _introStartPosition;
+    private Vector3 _introTargetPosition;
+    private float _introElapsed;
+    private float _introDelayRemaining;
+    private bool _introActive;
+
+    private void Start()
+    {
+        _introStartPosition = transform.position;
+        _introTargetPosition = _introStartPosition - transform.forward * introLength;
+        _introElapsed = 0f;
+        _introDelayRemaining = introStartDelay;
+        _introActive = playIntroMovement && introLength > 0f && introDuration > 0f;
+    }
 
     public void PlayDefaultShake(float intensityScale = 1f)
     {
-        if (intensityScale <= 0f)
+        if (intensityScale <= 0f || _introActive)
         {
             return;
         }
@@ -48,7 +69,7 @@ public class CameraFeedback : Singleton<CameraFeedback>
 
     public void Shake(float duration, float positionAmplitude, Vector3 rotationAmplitude, float frequency)
     {
-        if (duration <= 0f || frequency <= 0f)
+        if (duration <= 0f || frequency <= 0f || _introActive)
         {
             return;
         }
@@ -70,6 +91,13 @@ public class CameraFeedback : Singleton<CameraFeedback>
     private void LateUpdate()
     {
         RestorePreviousOffset();
+
+        if (_introActive)
+        {
+            UpdateIntro();
+            return;
+        }
+
         UpdateFollowX();
 
         if (_activeShakes.Count == 0)
@@ -112,6 +140,30 @@ public class CameraFeedback : Singleton<CameraFeedback>
 
         _lastPositionOffset = positionOffset;
         _lastRotationOffset = rotationOffset;
+    }
+
+    private void UpdateIntro()
+    {
+        if (_introDelayRemaining > 0f)
+        {
+            transform.position = _introStartPosition;
+            var delayDelta = useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
+            _introDelayRemaining -= delayDelta;
+            return;
+        }
+
+        var progress = Mathf.Clamp01(_introElapsed / introDuration);
+        var eased = introEase != null ? introEase.Evaluate(progress) : progress;
+        transform.position = Vector3.LerpUnclamped(_introStartPosition, _introTargetPosition, eased);
+
+        if (progress >= 1f)
+        {
+            _introActive = false;
+            return;
+        }
+
+        var deltaTime = useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
+        _introElapsed += deltaTime;
     }
 
     private void UpdateFollowX()
@@ -162,5 +214,8 @@ public class CameraFeedback : Singleton<CameraFeedback>
         defaultPositionAmplitude = Mathf.Max(0f, defaultPositionAmplitude);
         defaultFrequency = Mathf.Max(0.01f, defaultFrequency);
         followLerpSpeed = Mathf.Max(0f, followLerpSpeed);
+        introStartDelay = Mathf.Max(0f, introStartDelay);
+        introLength = Mathf.Max(0f, introLength);
+        introDuration = Mathf.Max(0.01f, introDuration);
     }
 }

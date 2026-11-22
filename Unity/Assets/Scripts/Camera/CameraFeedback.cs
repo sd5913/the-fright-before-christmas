@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Framework;
 using UnityEngine;
+using UnityEngine.UI;
 
 [DisallowMultipleComponent]
 public class CameraFeedback : Singleton<CameraFeedback>
@@ -34,6 +35,10 @@ public class CameraFeedback : Singleton<CameraFeedback>
     [SerializeField] private float introLength = 1.25f;
     [SerializeField] private float introDuration = 0.75f;
     [SerializeField] private AnimationCurve introEase = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
+    [SerializeField] private Image introFadeImage;
+    [SerializeField] private SpriteRenderer introLogoSprite;
+    [SerializeField] private float introLogoFadeDelay = 0f;
+    [SerializeField] private float introLogoFadeDuration = 0.5f;
 
     private readonly List<ActiveShake> _activeShakes = new List<ActiveShake>();
     private Vector3 _lastPositionOffset;
@@ -43,6 +48,9 @@ public class CameraFeedback : Singleton<CameraFeedback>
     private float _introElapsed;
     private float _introDelayRemaining;
     private bool _introActive;
+    private bool _logoFadeActive;
+    private float _logoFadeElapsed;
+    private float _logoFadeStartAlpha;
 
     private void Start()
     {
@@ -51,6 +59,7 @@ public class CameraFeedback : Singleton<CameraFeedback>
         _introElapsed = 0f;
         _introDelayRemaining = introStartDelay;
         _introActive = playIntroMovement && introLength > 0f && introDuration > 0f;
+        UpdateIntroFadeAlpha(_introActive ? 1f : 0f);
     }
 
     public void PlayDefaultShake(float intensityScale = 1f)
@@ -98,6 +107,7 @@ public class CameraFeedback : Singleton<CameraFeedback>
             return;
         }
 
+        UpdateLogoFadeOut();
         UpdateFollowX();
 
         if (_activeShakes.Count == 0)
@@ -147,6 +157,7 @@ public class CameraFeedback : Singleton<CameraFeedback>
         if (_introDelayRemaining > 0f)
         {
             transform.position = _introStartPosition;
+            UpdateIntroFadeAlpha(1f);
             var delayDelta = useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
             _introDelayRemaining -= delayDelta;
             return;
@@ -155,15 +166,67 @@ public class CameraFeedback : Singleton<CameraFeedback>
         var progress = Mathf.Clamp01(_introElapsed / introDuration);
         var eased = introEase != null ? introEase.Evaluate(progress) : progress;
         transform.position = Vector3.LerpUnclamped(_introStartPosition, _introTargetPosition, eased);
+        UpdateIntroFadeAlpha(1f - progress);
 
         if (progress >= 1f)
         {
+            UpdateIntroFadeAlpha(0f);
             _introActive = false;
+            StartLogoFadeOut();
             return;
         }
 
         var deltaTime = useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
         _introElapsed += deltaTime;
+    }
+
+    private void StartLogoFadeOut()
+    {
+        if (introLogoSprite == null || introLogoFadeDuration <= 0f)
+        {
+            return;
+        }
+
+        _logoFadeStartAlpha = introLogoSprite.color.a;
+        _logoFadeElapsed = -introLogoFadeDelay;
+        _logoFadeActive = true;
+    }
+
+    private void UpdateLogoFadeOut()
+    {
+        if (!_logoFadeActive || introLogoSprite == null)
+        {
+            return;
+        }
+
+        var deltaTime = useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
+        _logoFadeElapsed += deltaTime;
+        if (_logoFadeElapsed < 0f)
+        {
+            return;
+        }
+
+        var progress = Mathf.Clamp01(_logoFadeElapsed / introLogoFadeDuration);
+        var color = introLogoSprite.color;
+        color.a = Mathf.Lerp(_logoFadeStartAlpha, 0f, progress);
+        introLogoSprite.color = color;
+
+        if (progress >= 1f)
+        {
+            _logoFadeActive = false;
+        }
+    }
+
+    private void UpdateIntroFadeAlpha(float alpha)
+    {
+        if (introFadeImage == null)
+        {
+            return;
+        }
+
+        var color = introFadeImage.color;
+        color.a = Mathf.Clamp01(alpha);
+        introFadeImage.color = color;
     }
 
     private void UpdateFollowX()
@@ -217,5 +280,7 @@ public class CameraFeedback : Singleton<CameraFeedback>
         introStartDelay = Mathf.Max(0f, introStartDelay);
         introLength = Mathf.Max(0f, introLength);
         introDuration = Mathf.Max(0.01f, introDuration);
+        introLogoFadeDelay = Mathf.Max(0f, introLogoFadeDelay);
+        introLogoFadeDuration = Mathf.Max(0.01f, introLogoFadeDuration);
     }
 }

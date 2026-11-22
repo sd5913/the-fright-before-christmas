@@ -40,6 +40,7 @@ public class GameCharacter : MonoBehaviour
         {
             if (found[i] != null)
             {
+                found[i].BindGameCharacter(this);
                 _behaviours.Add(found[i]);
             }
         }

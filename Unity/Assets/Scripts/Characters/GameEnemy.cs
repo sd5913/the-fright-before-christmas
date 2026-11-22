@@ -3,14 +3,16 @@ using UnityEngine;
 public class GameEnemy : MonoBehaviour
 {
     [SerializeField] private Freezable freezable;
-    [SerializeField] private CharacterSwapper characterSwapper;
     [SerializeField] private float moveSpeed = 2.5f;
-    [SerializeField] private float targetRefreshInterval = 0.5f;
     [SerializeField] private bool useInitialZPosition = true;
     [SerializeField] private float fixedZPosition;
+    [SerializeField] private ProtectionArea protectionArea;
+    [SerializeField] private float randomTargetRefreshInterval = 1.5f;
+    [SerializeField] private float randomTargetReachDistance = 0.2f;
 
-    private GameCharacter[] _characters = new GameCharacter[0];
-    private float _nextTargetRefreshTime;
+    private BoxCollider _protectionAreaCollider;
+    private Vector2 _currentTargetXY;
+    private float _nextRandomTargetTime;
 
     private void Awake()
     {
@@ -18,6 +20,9 @@ public class GameEnemy : MonoBehaviour
         {
             fixedZPosition = transform.position.z;
         }
+
+        RefreshProtectionAreaReferences();
+        _currentTargetXY = new Vector2(transform.position.x, transform.position.y);
     }
 
     private void Update()
@@ -28,59 +33,62 @@ public class GameEnemy : MonoBehaviour
             return;
         }
 
-        RefreshTargetsIfNeeded();
-        if (_characters == null || _characters.Length == 0)
+        RefreshProtectionAreaReferences();
+        if (_protectionAreaCollider == null)
         {
             KeepFixedZ();
             return;
         }
 
-        var center = GetCharacterCenter();
         var current = transform.position;
+        var currentXY = new Vector2(current.x, current.y);
+        var shouldPickNewTarget = Time.time >= _nextRandomTargetTime
+            || Vector2.Distance(currentXY, _currentTargetXY) <= randomTargetReachDistance;
+        if (shouldPickNewTarget)
+        {
+            _currentTargetXY = GetRandomPointInProtectionArea();
+            _nextRandomTargetTime = Time.time + Mathf.Max(0.01f, randomTargetRefreshInterval);
+        }
+
         var movedXY = Vector2.MoveTowards(
-            new Vector2(current.x, current.y),
-            new Vector2(center.x, center.y),
+            currentXY,
+            _currentTargetXY,
             moveSpeed * Time.deltaTime);
 
         transform.position = new Vector3(movedXY.x, movedXY.y, fixedZPosition);
     }
 
-    private void RefreshTargetsIfNeeded()
+    private void RefreshProtectionAreaReferences()
     {
-        if (Time.time < _nextTargetRefreshTime && _characters != null && _characters.Length > 0)
+        if (protectionArea == null)
         {
+            protectionArea = FindAnyObjectByType<ProtectionArea>();
+        }
+
+        if (protectionArea == null)
+        {
+            _protectionAreaCollider = null;
             return;
         }
 
-        if (characterSwapper == null)
+        if (_protectionAreaCollider == null || _protectionAreaCollider.gameObject != protectionArea.gameObject)
         {
-            characterSwapper = FindAnyObjectByType<CharacterSwapper>();
+            _protectionAreaCollider = protectionArea.GetComponent<BoxCollider>();
         }
-
-        _characters = characterSwapper != null
-            ? characterSwapper.GetComponentsInChildren<GameCharacter>()
-            : FindObjectsOfType<GameCharacter>();
-
-        _nextTargetRefreshTime = Time.time + Mathf.Max(0.01f, targetRefreshInterval);
     }
 
-    private Vector3 GetCharacterCenter()
+    private Vector2 GetRandomPointInProtectionArea()
     {
-        var sum = Vector3.zero;
-        var count = 0;
+        var center = _protectionAreaCollider.center;
+        var size = _protectionAreaCollider.size * 0.5f;
 
-        for (var i = 0; i < _characters.Length; i++)
-        {
-            if (_characters[i] == null)
-            {
-                continue;
-            }
+        var localPoint = new Vector3(
+            center.x + Random.Range(-size.x, size.x),
+            center.y + Random.Range(-size.y, size.y),
+            center.z + Random.Range(-size.z, size.z));
 
-            sum += _characters[i].transform.position;
-            count++;
-        }
-
-        return count > 0 ? sum / count : transform.position;
+        var worldPoint = _protectionAreaCollider.transform.TransformPoint(localPoint);
+        return new Vector2(worldPoint.x, worldPoint.y);
     }
 
     private void KeepFixedZ()
@@ -98,6 +106,7 @@ public class GameEnemy : MonoBehaviour
     private void OnValidate()
     {
         moveSpeed = Mathf.Max(0f, moveSpeed);
-        targetRefreshInterval = Mathf.Max(0.01f, targetRefreshInterval);
+        randomTargetRefreshInterval = Mathf.Max(0.01f, randomTargetRefreshInterval);
+        randomTargetReachDistance = Mathf.Max(0.01f, randomTargetReachDistance);
     }
 }

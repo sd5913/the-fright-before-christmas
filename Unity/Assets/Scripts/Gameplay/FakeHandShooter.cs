@@ -104,6 +104,11 @@ public class FakeHandShooter : MonoBehaviour
             SetCollidersEnabled(firedProjectile, true);
         }
 
+        if (firedProjectile.TryGetComponent<AutoDestroy>(out var autoDestroyOnFired))
+        {
+            autoDestroyOnFired.SetPaused(false);
+        }
+
         if (firedProjectile.TryGetComponent<ThrownProjectile>(out var thrownProjectile))
         {
             thrownProjectile.Launch(initialVelocity);
@@ -176,6 +181,11 @@ public class FakeHandShooter : MonoBehaviour
         if (disableHeldColliders)
         {
             SetCollidersEnabled(_heldProjectile, false);
+        }
+
+        if (_heldProjectile.TryGetComponent<AutoDestroy>(out var autoDestroyOnHeld))
+        {
+            autoDestroyOnHeld.SetPaused(true);
         }
 
         if (punchOnSpawn)

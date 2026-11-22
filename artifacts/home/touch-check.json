@@ -1,0 +1,10 @@
+{
+  "device": "iPhone 13 emulation",
+  "finePointer": false,
+  "parallaxDisabled": true,
+  "canvasDprCapped": true,
+  "canvas": {
+    "width": 585,
+    "cssWidth": 390
+  }
+}

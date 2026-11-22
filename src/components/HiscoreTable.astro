@@ -1,0 +1,90 @@
+---
+import '../styles/hiscores.css';
+
+interface Props {
+  apiBaseUrl: string;
+}
+
+const { apiBaseUrl } = Astro.props;
+// The illustrations decorate podium positions, not player-selected avatars.
+const podiumArt = [
+  { src: '/assets/home/characters/mandy-poster.webp', width: 420, height: 508, title: 'Champion', motif: 'mandy' },
+  { src: '/assets/home/characters/billy-poster-v7.webp', width: 420, height: 498, title: 'Runner-up', motif: 'billy' },
+  { src: '/assets/home/ufo.webp', width: 800, height: 533, title: 'Third place', motif: 'ufo' },
+];
+---
+
+<section class="hiscores" data-live-hiscores data-api-base-url={apiBaseUrl} data-state="idle" aria-labelledby="hiscores-title" aria-describedby="scores-feedback" aria-busy="false">
+  <div class="leaderboard-atmosphere" aria-hidden="true"><div class="leaderboard-stars"></div><div class="leaderboard-moon"></div></div>
+
+  <div class="hiscores-inner">
+    <div class="hiscores-heading">
+      <p class="hiscores-eyebrow"><span></span> The hall of fright <span></span></p>
+      <h1 id="hiscores-title">HIGH <em>SCORES</em><span class="title-star" aria-hidden="true">✦</span></h1>
+      <p class="hiscores-intro">Some save Christmas. Some make the leaderboard.</p>
+      <div class="hiscores-controls">
+        <button class="scores-refresh" id="scores-refresh" type="button" disabled><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5" /><path d="M5.2 7a8 8 0 0 1 13-1L20 8M4 16l1.8 2a8 8 0 0 0 13-1" /></svg><span id="scores-refresh-label">Refresh</span></button>
+        <time id="scores-updated" class="scores-updated" hidden></time>
+      </div>
+    </div>
+
+    <div class="hiscores-content">
+    <div class="podium-stage">
+      <div class="podium-spotlight" aria-hidden="true"></div>
+      <ol class="podium" aria-label="Top three podium places">
+        {podiumArt.map((art, index) => {
+          return (
+            <li class={`podium-place podium-place--${index + 1}`} data-podium-rank={index + 1} data-entry-state="waiting">
+              <article class="podium-entry" aria-label={`${art.title} — waiting for results`}>
+                <div class={`podium-portrait podium-portrait--${art.motif}`} aria-hidden="true">
+                  <span class="podium-halo"></span>
+                  <span class="podium-orbit"></span>
+                  {index === 0 && <svg class="podium-crown" width="68" height="58" viewBox="0 0 72 60" fill="none"><path d="m9 16 16 13L36 9l11 20 16-13-7 32H16L9 16Z" fill="url(#crown-gold)" stroke="#ffe7ad" stroke-width="1.5" /><path d="M20 54h32" stroke="#f8ce7b" stroke-width="3" stroke-linecap="round" /><circle cx="9" cy="12" r="4" fill="#ffe6a1" /><circle cx="36" cy="5" r="4" fill="#ffe6a1" /><circle cx="63" cy="12" r="4" fill="#ffe6a1" /><defs><linearGradient id="crown-gold" x1="36" y1="9" x2="36" y2="48" gradientUnits="userSpaceOnUse"><stop stop-color="#fff1c3" /><stop offset="1" stop-color="#cd8d42" /></linearGradient></defs></svg>}
+                  <span class="podium-spark podium-spark--one">✦</span><span class="podium-spark podium-spark--two">✧</span>
+                  <img src={art.src} width={art.width} height={art.height} alt="" fetchpriority={index === 0 ? 'high' : 'auto'} draggable="false" />
+                </div>
+                <div class="podium-plinth">
+                  <div class="podium-deck" aria-hidden="true"></div>
+                  <span class="podium-position"><span aria-hidden="true">✦</span> {art.title}</span>
+                  <span class="hiscores-sr-only">Rank {index + 1}</span>
+                  <h2 class="podium-player-name" data-player-name>—</h2>
+                  <p class="podium-score"><span data-score-value>—</span><span>PTS</span></p>
+                  <span class="podium-rank-stamp" aria-hidden="true">0{index + 1}</span>
+                  <span class="podium-plinth-line" aria-hidden="true"></span>
+                </div>
+              </article>
+            </li>
+          );
+        })}
+      </ol>
+      <div class="podium-floor" aria-hidden="true"></div>
+    </div>
+
+    <div class="hiscores-board">
+      <div class="hiscores-board-heading">
+        <div><span class="hiscores-section-number" aria-hidden="true">04—10</span><h2>The rest of the legends</h2></div>
+        <span class="hiscores-top-label">The nice(ish) list <span aria-hidden="true">✦</span></span>
+      </div>
+      <table class="hiscores-table" id="scores-table" hidden>
+        <caption class="hiscores-sr-only">High scores from fourth to tenth place. The top three players are on the podium.</caption>
+        <thead><tr><th scope="col">Rank</th><th scope="col">Player</th><th scope="col" class="hiscores-score">Score</th></tr></thead>
+        <tbody id="scores-rows"></tbody>
+      </table>
+      <template id="score-row-template"><tr><td><span class="hiscores-rank" data-cell-rank></span></td><th scope="row"><span class="hiscores-player"><span class="hiscores-avatar" aria-hidden="true"></span><span class="hiscores-player-name"></span></span></th><td class="hiscores-score"><span data-cell-score></span><span class="hiscores-points-unit" aria-hidden="true">PTS</span></td></tr></template>
+      <div class="hiscores-state-panel" id="scores-state-panel">
+        <span class="scores-state-star" aria-hidden="true">✧</span>
+        <h3 id="scores-state-heading">Your place in the stars.</h3>
+        <p id="scores-state-description">Enable JavaScript to load high scores.</p>
+        <button class="scores-refresh" id="scores-retry" type="button" hidden>Try again <span aria-hidden="true">↻</span></button>
+        <a class="scores-state-link" id="scores-adventure" href="/" hidden>Back to the adventure <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+
+    </div>
+
+    <div class="hiscores-bottom"><p id="scores-feedback" role="status" aria-live="polite"></p><a href="/">Your next adventure awaits <span aria-hidden="true">↗</span></a></div>
+  </div>
+</section>
+<script>
+  import '../scripts/leaderboard';
+</script>

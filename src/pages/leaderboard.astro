@@ -1,0 +1,28 @@
+---
+import '../styles/home.css';
+import HiscoreTable from '../components/HiscoreTable.astro';
+const apiBaseUrl = import.meta.env.PUBLIC_API_BASE_URL?.trim() || 'https://metapool.cloud/tfbc-api';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Enter the Hall of Fright. Discover the latest high scores for The Fright Before Christmas." />
+    <meta name="theme-color" content="#100d1b" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>High Scores — The Fright Before Christmas</title>
+  </head>
+  <body class="leaderboard-page">
+    <a class="skip-link" href="#main-content">Skip to high scores</a>
+    <header class="site-header leaderboard-header">
+      <a class="wordmark" href="/" aria-label="The Fright Before Christmas home">TFBC<span aria-hidden="true">✦</span></a>
+      <a class="leaderboard-back" href="/"><span aria-hidden="true">←</span> Back to home</a>
+    </header>
+    <main id="main-content">
+      <HiscoreTable apiBaseUrl={apiBaseUrl} />
+    </main>
+    <footer class="site-footer leaderboard-footer"><span>THE FRIGHT BEFORE CHRISTMAS</span><span>Every legend starts with one more try.</span><a href="/">Back to the adventure <span aria-hidden="true">↗</span></a></footer>
+  </body>
+</html>

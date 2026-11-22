@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [DisallowMultipleComponent]
-public class MouseHeadLookTargetDriver : MonoBehaviour
+public class MouseHeadLookTargetDriver : CharacterBehaviour
 {
     private enum TargetingMode
     {
@@ -35,7 +35,7 @@ public class MouseHeadLookTargetDriver : MonoBehaviour
 
     private Vector3 _targetVelocity;
 
-    private void Update()
+    protected override void OnUpdate(float deltaTime)
     {
         if (characterRoot == null || headPivot == null || lookTarget == null)
         {
@@ -48,21 +48,28 @@ public class MouseHeadLookTargetDriver : MonoBehaviour
             return;
         }
 
-        if (!MouseInputManager.TryGetMousePosition(out var mousePosition))
-        {
-            return;
-        }
-
         Vector3 clampedTargetPoint;
-        if (targetingMode == TargetingMode.ScreenSpaceFrontFacing)
+        var isFocused = gameCharacter != null && gameCharacter.IsFocused;
+        if (!isFocused)
         {
-            clampedTargetPoint = BuildFrontFacingTargetPoint(activeCamera, mousePosition);
+            clampedTargetPoint = BuildNeutralTargetPoint();
         }
         else
         {
-            var mouseRay = activeCamera.ScreenPointToRay(mousePosition);
-            var desiredPoint = ResolveDesiredLookPoint(mouseRay);
-            clampedTargetPoint = BuildClampedTargetPoint(desiredPoint);
+            if (!MouseInputManager.TryGetMousePosition(out var mousePosition))
+            {
+                clampedTargetPoint = BuildNeutralTargetPoint();
+            }
+            else if (targetingMode == TargetingMode.ScreenSpaceFrontFacing)
+            {
+                clampedTargetPoint = BuildFrontFacingTargetPoint(activeCamera, mousePosition);
+            }
+            else
+            {
+                var mouseRay = activeCamera.ScreenPointToRay(mousePosition);
+                var desiredPoint = ResolveDesiredLookPoint(mouseRay);
+                clampedTargetPoint = BuildClampedTargetPoint(desiredPoint);
+            }
         }
 
         if (smoothTime <= 0f)
@@ -147,6 +154,11 @@ public class MouseHeadLookTargetDriver : MonoBehaviour
         return headPivot.position + worldDirection * Mathf.Max(0.1f, lookDistance);
     }
 
+    private Vector3 BuildNeutralTargetPoint()
+    {
+        return headPivot.position + characterRoot.forward * Mathf.Max(0.1f, lookDistance);
+    }
+
     private void OnValidate()
     {
         horizontalScreenRange = Mathf.Clamp(horizontalScreenRange, 0.01f, 0.5f);
@@ -156,5 +168,4 @@ public class MouseHeadLookTargetDriver : MonoBehaviour
         lookDistance = Mathf.Max(0.1f, lookDistance);
         smoothTime = Mathf.Max(0f, smoothTime);
     }
-
 }

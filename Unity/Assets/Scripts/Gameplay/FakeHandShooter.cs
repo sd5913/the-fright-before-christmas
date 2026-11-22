@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 
 [DisallowMultipleComponent]
-public class FakeHandShooter : MonoBehaviour
+public class FakeHandShooter : CharacterBehaviour
 {
     [Header("References")]
     [SerializeField] private Transform handOrigin;
@@ -44,7 +44,7 @@ public class FakeHandShooter : MonoBehaviour
         SpawnHeldProjectile();
     }
 
-    private void Update()
+    protected override void OnUpdate(float deltaTime)
     {
         if (handOrigin == null || projectilePrefab == null)
         {
@@ -54,6 +54,12 @@ public class FakeHandShooter : MonoBehaviour
         if (_heldProjectile == null && _spawnHeldRoutine == null)
         {
             SpawnHeldProjectile();
+        }
+
+        var isFocused = gameCharacter != null && gameCharacter.IsFocused;
+        if (!isFocused)
+        {
+            return;
         }
 
         if (Time.time < _nextFireTime || !MouseInputManager.GetLeftPressedThisFrame())
@@ -137,9 +143,9 @@ public class FakeHandShooter : MonoBehaviour
             rigidbody.velocity = initialVelocity;
         }
 
-        if (CameraShakeController.Instance != null)
+        if (CameraFeedback.Instance != null)
         {
-            CameraShakeController.Instance.PlayDefaultShake(shootShakeIntensity);
+            CameraFeedback.Instance.PlayDefaultShake(shootShakeIntensity);
         }
 
         _nextFireTime = Time.time + fireRate;

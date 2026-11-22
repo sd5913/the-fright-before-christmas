@@ -2,7 +2,7 @@ using System.Reflection;
 using UnityEngine;
 
 [DisallowMultipleComponent]
-public class ConstraintWeightDriver : MonoBehaviour
+public class ConstraintWeightDriver : CharacterBehaviour
 {
     [SerializeField] private Component weightedComponent;
     [SerializeField] private string weightMemberName = "weight";
@@ -19,7 +19,7 @@ public class ConstraintWeightDriver : MonoBehaviour
         _currentWeight = ReadWeight();
     }
 
-    private void Update()
+    protected override void OnUpdate(float deltaTime)
     {
         if (_weightMember == null)
         {
@@ -32,7 +32,7 @@ public class ConstraintWeightDriver : MonoBehaviour
             targetWeight = 0f;
         }
 
-        _currentWeight = Mathf.MoveTowards(_currentWeight, targetWeight, blendSpeed * Time.deltaTime);
+        _currentWeight = Mathf.MoveTowards(_currentWeight, targetWeight, blendSpeed * deltaTime);
         WriteWeight(_currentWeight);
     }
 
@@ -98,5 +98,4 @@ public class ConstraintWeightDriver : MonoBehaviour
         blendSpeed = Mathf.Max(0f, blendSpeed);
         ResolveWeightMember();
     }
-
 }

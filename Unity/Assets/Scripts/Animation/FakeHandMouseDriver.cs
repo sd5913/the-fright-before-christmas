@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [DisallowMultipleComponent]
-public class FakeHandMouseDriver : MonoBehaviour
+public class FakeHandMouseDriver : CharacterBehaviour
 {
     [Header("References")]
     [SerializeField] private Transform characterRoot;
@@ -29,9 +29,26 @@ public class FakeHandMouseDriver : MonoBehaviour
     [SerializeField] private Vector3 rotationEulerOffset;
 
     private Vector3 _velocity;
+    private bool _hasDefaultPose;
+    private Vector3 _defaultLocalPosition;
+    private Quaternion _defaultLocalRotation;
 
-    private void LateUpdate()
+    private void Awake()
     {
+        TryCacheDefaultPose();
+    }
+
+    protected override void OnLateUpdate(float deltaTime)
+    {
+        TryCacheDefaultPose();
+
+        var isFocused = gameCharacter != null && gameCharacter.IsFocused;
+        if (!isFocused)
+        {
+            LerpToDefaultPose(deltaTime);
+            return;
+        }
+
         if (characterRoot == null || handTransform == null)
         {
             return;
@@ -94,7 +111,7 @@ public class FakeHandMouseDriver : MonoBehaviour
 
         if (rotateToMouse)
         {
-            RotateTowardsMouse(mouseOnCharacterPlane, activeCamera);
+            RotateTowardsMouse(mouseOnCharacterPlane, activeCamera, deltaTime);
         }
     }
 
@@ -144,7 +161,7 @@ public class FakeHandMouseDriver : MonoBehaviour
         rotationSmoothSpeed = Mathf.Max(0f, rotationSmoothSpeed);
     }
 
-    private void RotateTowardsMouse(Vector3 mouseOnCharacterPlane, Camera activeCamera)
+    private void RotateTowardsMouse(Vector3 mouseOnCharacterPlane, Camera activeCamera, float deltaTime)
     {
         var aimDirection = mouseOnCharacterPlane - handTransform.position;
         if (aimDirection.sqrMagnitude <= Mathf.Epsilon)
@@ -160,8 +177,53 @@ public class FakeHandMouseDriver : MonoBehaviour
             return;
         }
 
-        var t = 1f - Mathf.Exp(-rotationSmoothSpeed * Time.deltaTime);
+        var t = 1f - Mathf.Exp(-rotationSmoothSpeed * deltaTime);
         handTransform.rotation = Quaternion.Slerp(handTransform.rotation, desiredRotation, t);
+    }
+
+    private void TryCacheDefaultPose()
+    {
+        if (_hasDefaultPose || characterRoot == null || handTransform == null)
+        {
+            return;
+        }
+
+        _defaultLocalPosition = characterRoot.InverseTransformPoint(handTransform.position);
+        _defaultLocalRotation = Quaternion.Inverse(characterRoot.rotation) * handTransform.rotation;
+        _hasDefaultPose = true;
+    }
+
+    private void LerpToDefaultPose(float deltaTime)
+    {
+        if (!_hasDefaultPose || characterRoot == null || handTransform == null)
+        {
+            return;
+        }
+
+        var targetPosition = characterRoot.TransformPoint(_defaultLocalPosition);
+        if (smoothTime <= 0f)
+        {
+            handTransform.position = targetPosition;
+            _velocity = Vector3.zero;
+        }
+        else
+        {
+            handTransform.position = Vector3.SmoothDamp(
+                handTransform.position,
+                targetPosition,
+                ref _velocity,
+                smoothTime);
+        }
+
+        var targetRotation = characterRoot.rotation * _defaultLocalRotation;
+        if (rotationSmoothSpeed <= 0f)
+        {
+            handTransform.rotation = targetRotation;
+            return;
+        }
+
+        var t = 1f - Mathf.Exp(-rotationSmoothSpeed * deltaTime);
+        handTransform.rotation = Quaternion.Slerp(handTransform.rotation, targetRotation, t);
     }
 
 }

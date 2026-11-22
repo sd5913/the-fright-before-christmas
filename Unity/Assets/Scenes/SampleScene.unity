@@ -1538,11 +1538,14 @@ MonoBehaviour:
   sourceCamera: {fileID: 330585545}
   projectilePrefab: {fileID: 6813212265894234542, guid: d7a51e1aec5212446b32779a5b5f9b97, type: 3}
   throwUpReference: {fileID: 0}
-  cameraShake: {fileID: 0}
   throwSpeed: 8.5
   upwardBoost: 1.4
   fireRate: 0.2
   spawnForwardOffset: 0.06
+  scaleThrowByDistance: 1
+  distanceForMaxThrow: 3
+  minSpeedMultiplier: 0.3
+  minUpwardMultiplier: 0.45
   disableHeldColliders: 1
   punchOnSpawn: 1
   punchAmount: 0.2
@@ -2065,11 +2068,14 @@ MonoBehaviour:
   sourceCamera: {fileID: 330585545}
   projectilePrefab: {fileID: 6813212265894234542, guid: d7a51e1aec5212446b32779a5b5f9b97, type: 3}
   throwUpReference: {fileID: 0}
-  cameraShake: {fileID: 330585548}
   throwSpeed: 8.5
   upwardBoost: 1.4
   fireRate: 0.2
   spawnForwardOffset: 0.06
+  scaleThrowByDistance: 1
+  distanceForMaxThrow: 3
+  minSpeedMultiplier: 0.3
+  minUpwardMultiplier: 0.45
   disableHeldColliders: 1
   punchOnSpawn: 1
   punchAmount: 0.2
@@ -5739,11 +5745,14 @@ MonoBehaviour:
   sourceCamera: {fileID: 330585545}
   projectilePrefab: {fileID: 6813212265894234542, guid: d7a51e1aec5212446b32779a5b5f9b97, type: 3}
   throwUpReference: {fileID: 0}
-  cameraShake: {fileID: 0}
   throwSpeed: 8.5
   upwardBoost: 1.4
   fireRate: 0.2
   spawnForwardOffset: 0.06
+  scaleThrowByDistance: 1
+  distanceForMaxThrow: 3
+  minSpeedMultiplier: 0.3
+  minUpwardMultiplier: 0.45
   disableHeldColliders: 1
   punchOnSpawn: 1
   punchAmount: 0.2

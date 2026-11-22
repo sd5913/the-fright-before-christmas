@@ -78,6 +78,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 63bf960b0155a1140b0eecd49e2e3d96, type: 3}
       insertIndex: -1
       addedObject: {fileID: -8175741350138233485}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 63bf960b0155a1140b0eecd49e2e3d96, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -8002036988166322091}
   m_SourcePrefab: {fileID: 100100000, guid: 63bf960b0155a1140b0eecd49e2e3d96, type: 3}
 --- !u!1 &6813212265894234542 stripped
 GameObject:
@@ -126,3 +129,25 @@ MonoBehaviour:
   lifetimeSeconds: 6
   useUnscaledTime: 1
   startPaused: 1
+--- !u!114 &-8002036988166322091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6813212265894234542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c21ecff066d839345bd58773d2f7be0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThrownProjectile
+  gravityMultiplier: 1
+  alignToVelocity: 1
+  randomizeInitialRotation: 1
+  initialRotationRandomDegrees: {x: 60, y: 60, z: 60}
+  applySpin: 1
+  spinDegreesPerSecond: {x: 10, y: 10, z: 420}
+  spinRandomDegreesPerSecond: {x: 60, y: 60, z: 120}
+  addRandomTorqueImpulse: 1
+  randomTorqueImpulse: 0.2
+  destroyAfterSeconds: 6

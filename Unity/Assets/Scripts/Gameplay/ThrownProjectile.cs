@@ -7,15 +7,23 @@ public class ThrownProjectile : MonoBehaviour
     [SerializeField] private float gravityMultiplier = 1f;
     [SerializeField] private bool alignToVelocity = true;
 
-    [Header("Spin")]
+    [Header("Initial Rotation")]
+    [SerializeField] private bool randomizeInitialRotation = true;
+    [SerializeField] private Vector3 initialRotationRandomDegrees = new Vector3(10f, 10f, 20f);
+
+    [Header("Spin / Torque")]
     [SerializeField] private bool applySpin = true;
     [SerializeField] private Vector3 spinDegreesPerSecond = new Vector3(0f, 0f, 420f);
+    [SerializeField] private Vector3 spinRandomDegreesPerSecond = new Vector3(60f, 60f, 120f);
+    [SerializeField] private bool addRandomTorqueImpulse;
+    [SerializeField] private float randomTorqueImpulse = 0.2f;
 
     [Header("Lifetime")]
     [SerializeField] private float destroyAfterSeconds = 6f;
 
     private Rigidbody _rigidbody;
     private Vector3 _velocity;
+    private Vector3 _currentSpinDegreesPerSecond;
     private bool _isLaunched;
     private float _destroyAt;
 
@@ -28,6 +36,16 @@ public class ThrownProjectile : MonoBehaviour
     {
         _isLaunched = true;
         _velocity = initialVelocity;
+        _currentSpinDegreesPerSecond = BuildSpinDegreesPerSecond();
+
+        if (randomizeInitialRotation)
+        {
+            transform.rotation *= Quaternion.Euler(
+                Random.Range(-initialRotationRandomDegrees.x, initialRotationRandomDegrees.x),
+                Random.Range(-initialRotationRandomDegrees.y, initialRotationRandomDegrees.y),
+                Random.Range(-initialRotationRandomDegrees.z, initialRotationRandomDegrees.z));
+        }
+
         if (destroyAfterSeconds > 0f)
         {
             _destroyAt = Time.time + destroyAfterSeconds;
@@ -40,7 +58,11 @@ public class ThrownProjectile : MonoBehaviour
             _rigidbody.velocity = initialVelocity;
             if (applySpin)
             {
-                _rigidbody.angularVelocity = spinDegreesPerSecond * Mathf.Deg2Rad;
+                _rigidbody.angularVelocity = _currentSpinDegreesPerSecond * Mathf.Deg2Rad;
+            }
+            if (addRandomTorqueImpulse && randomTorqueImpulse > 0f)
+            {
+                _rigidbody.AddTorque(Random.onUnitSphere * randomTorqueImpulse, ForceMode.Impulse);
             }
         }
     }
@@ -54,6 +76,7 @@ public class ThrownProjectile : MonoBehaviour
 
         _isLaunched = false;
         _velocity = Vector3.zero;
+        _currentSpinDegreesPerSecond = Vector3.zero;
         _destroyAt = 0f;
 
         if (_rigidbody != null)
@@ -84,7 +107,7 @@ public class ThrownProjectile : MonoBehaviour
 
             if (applySpin)
             {
-                transform.Rotate(spinDegreesPerSecond * Time.deltaTime, Space.Self);
+                transform.Rotate(_currentSpinDegreesPerSecond * Time.deltaTime, Space.Self);
             }
         }
 
@@ -119,6 +142,20 @@ public class ThrownProjectile : MonoBehaviour
     private void OnValidate()
     {
         gravityMultiplier = Mathf.Max(0f, gravityMultiplier);
+        randomTorqueImpulse = Mathf.Max(0f, randomTorqueImpulse);
         destroyAfterSeconds = Mathf.Max(0f, destroyAfterSeconds);
+    }
+
+    private Vector3 BuildSpinDegreesPerSecond()
+    {
+        if (!applySpin)
+        {
+            return Vector3.zero;
+        }
+
+        return new Vector3(
+            spinDegreesPerSecond.x + Random.Range(-spinRandomDegreesPerSecond.x, spinRandomDegreesPerSecond.x),
+            spinDegreesPerSecond.y + Random.Range(-spinRandomDegreesPerSecond.y, spinRandomDegreesPerSecond.y),
+            spinDegreesPerSecond.z + Random.Range(-spinRandomDegreesPerSecond.z, spinRandomDegreesPerSecond.z));
     }
 }

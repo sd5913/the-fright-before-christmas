@@ -5,10 +5,18 @@ using UnityEngine;
 public class GameCharacter : MonoBehaviour
 {
     private readonly List<CharacterBehaviour> _behaviours = new List<CharacterBehaviour>();
+    private bool _isReady;
+
+    public bool IsFocused;
 
     private void Awake()
     {
         RefreshBehaviours();
+    }
+
+    private void Start()
+    {
+        _isReady = true;
     }
 
     private void OnValidate()
@@ -23,12 +31,40 @@ public class GameCharacter : MonoBehaviour
 
     private void Update()
     {
-        RunBehaviours(CharacterUpdatePhase.Update, Time.deltaTime);
+        if (!_isReady)
+        {
+            return;
+        }
+
+        for (var i = 0; i < _behaviours.Count; i++)
+        {
+            var behaviour = _behaviours[i];
+            if (behaviour == null)
+            {
+                continue;
+            }
+
+            behaviour.ExecuteUpdate(Time.deltaTime);
+        }
     }
 
     private void LateUpdate()
     {
-        RunBehaviours(CharacterUpdatePhase.LateUpdate, Time.deltaTime);
+        if (!_isReady)
+        {
+            return;
+        }
+
+        for (var i = 0; i < _behaviours.Count; i++)
+        {
+            var behaviour = _behaviours[i];
+            if (behaviour == null)
+            {
+                continue;
+            }
+
+            behaviour.ExecuteLateUpdate(Time.deltaTime);
+        }
     }
 
     [ContextMenu("Refresh Character Behaviours")]
@@ -46,17 +82,4 @@ public class GameCharacter : MonoBehaviour
         }
     }
 
-    private void RunBehaviours(CharacterUpdatePhase phase, float deltaTime)
-    {
-        for (var i = 0; i < _behaviours.Count; i++)
-        {
-            var behaviour = _behaviours[i];
-            if (behaviour == null || behaviour.UpdatePhase != phase)
-            {
-                continue;
-            }
-
-            behaviour.ExecuteUpdate(deltaTime);
-        }
-    }
 }

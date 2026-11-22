@@ -1,4 +1,5 @@
 using System.Collections;
+using Framework;
 using UnityEngine;
 
 [DisallowMultipleComponent]
@@ -55,10 +56,15 @@ public class FakeHandShooter : CharacterBehaviour
         {
             SpawnHeldProjectile();
         }
-
+        
         if (Time.time < _nextFireTime || !MouseInputManager.GetLeftPressedThisFrame())
         {
             return;
+        }
+
+        if (gameCharacter.IsFocused)
+        {
+            this.Log($"{gameCharacter.name} is focused");
         }
 
         var activeCamera = sourceCamera != null ? sourceCamera : Camera.main;

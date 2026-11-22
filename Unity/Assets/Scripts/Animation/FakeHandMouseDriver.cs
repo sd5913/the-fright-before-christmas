@@ -30,12 +30,7 @@ public class FakeHandMouseDriver : CharacterBehaviour
 
     private Vector3 _velocity;
 
-    protected override CharacterUpdatePhase GetUpdatePhase()
-    {
-        return CharacterUpdatePhase.LateUpdate;
-    }
-
-    protected override void OnUpdate(float deltaTime)
+    protected override void OnLateUpdate(float deltaTime)
     {
         if (characterRoot == null || handTransform == null)
         {

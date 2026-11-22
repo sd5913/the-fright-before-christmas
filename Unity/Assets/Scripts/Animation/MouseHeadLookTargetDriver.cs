@@ -48,21 +48,28 @@ public class MouseHeadLookTargetDriver : CharacterBehaviour
             return;
         }
 
-        if (!MouseInputManager.TryGetMousePosition(out var mousePosition))
-        {
-            return;
-        }
-
         Vector3 clampedTargetPoint;
-        if (targetingMode == TargetingMode.ScreenSpaceFrontFacing)
+        var isFocused = gameCharacter != null && gameCharacter.IsFocused;
+        if (!isFocused)
         {
-            clampedTargetPoint = BuildFrontFacingTargetPoint(activeCamera, mousePosition);
+            clampedTargetPoint = BuildNeutralTargetPoint();
         }
         else
         {
-            var mouseRay = activeCamera.ScreenPointToRay(mousePosition);
-            var desiredPoint = ResolveDesiredLookPoint(mouseRay);
-            clampedTargetPoint = BuildClampedTargetPoint(desiredPoint);
+            if (!MouseInputManager.TryGetMousePosition(out var mousePosition))
+            {
+                clampedTargetPoint = BuildNeutralTargetPoint();
+            }
+            else if (targetingMode == TargetingMode.ScreenSpaceFrontFacing)
+            {
+                clampedTargetPoint = BuildFrontFacingTargetPoint(activeCamera, mousePosition);
+            }
+            else
+            {
+                var mouseRay = activeCamera.ScreenPointToRay(mousePosition);
+                var desiredPoint = ResolveDesiredLookPoint(mouseRay);
+                clampedTargetPoint = BuildClampedTargetPoint(desiredPoint);
+            }
         }
 
         if (smoothTime <= 0f)
@@ -145,6 +152,11 @@ public class MouseHeadLookTargetDriver : CharacterBehaviour
         var localRotation = Quaternion.Euler(pitch, yaw, 0f);
         var worldDirection = characterRoot.TransformDirection(localRotation * Vector3.forward);
         return headPivot.position + worldDirection * Mathf.Max(0.1f, lookDistance);
+    }
+
+    private Vector3 BuildNeutralTargetPoint()
+    {
+        return headPivot.position + characterRoot.forward * Mathf.Max(0.1f, lookDistance);
     }
 
     private void OnValidate()

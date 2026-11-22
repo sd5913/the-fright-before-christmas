@@ -1,11 +1,5 @@
 using UnityEngine;
 
-public enum CharacterUpdatePhase
-{
-    Update,
-    LateUpdate
-}
-
 public abstract class CharacterBehaviour : MonoBehaviour
 {
     private GameCharacter _gameCharacter;
@@ -25,8 +19,6 @@ public abstract class CharacterBehaviour : MonoBehaviour
 
     protected GameCharacter GameCharacter => gameCharacter;
 
-    internal CharacterUpdatePhase UpdatePhase => GetUpdatePhase();
-
     internal void BindGameCharacter(GameCharacter owner)
     {
         _gameCharacter = owner;
@@ -42,10 +34,21 @@ public abstract class CharacterBehaviour : MonoBehaviour
         OnUpdate(deltaTime);
     }
 
-    protected virtual CharacterUpdatePhase GetUpdatePhase()
+    internal void ExecuteLateUpdate(float deltaTime)
     {
-        return CharacterUpdatePhase.Update;
+        if (!isActiveAndEnabled)
+        {
+            return;
+        }
+
+        OnLateUpdate(deltaTime);
     }
 
-    protected abstract void OnUpdate(float deltaTime);
+    protected virtual void OnUpdate(float deltaTime)
+    {
+    }
+
+    protected virtual void OnLateUpdate(float deltaTime)
+    {
+    }
 }

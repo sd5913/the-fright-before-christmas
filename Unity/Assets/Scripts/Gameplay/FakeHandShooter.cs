@@ -31,9 +31,6 @@ public class FakeHandShooter : CharacterBehaviour
     [SerializeField] private float punchDuration = 0.2f;
     [SerializeField] private int punchVibrato = 2;
 
-    [Header("Shoot Feedback")]
-    [SerializeField] private float shootShakeIntensity = 1f;
-
     private float _nextFireTime;
     private GameObject _heldProjectile;
     private Coroutine _punchRoutine;
@@ -143,11 +140,6 @@ public class FakeHandShooter : CharacterBehaviour
             rigidbody.velocity = initialVelocity;
         }
 
-        if (CameraFeedback.Instance != null)
-        {
-            CameraFeedback.Instance.PlayDefaultShake(shootShakeIntensity);
-        }
-
         _nextFireTime = Time.time + fireRate;
         QueueSpawnHeldProjectile(fireRate);
     }
@@ -162,7 +154,6 @@ public class FakeHandShooter : CharacterBehaviour
         punchAmount = Mathf.Max(0f, punchAmount);
         punchDuration = Mathf.Max(0.01f, punchDuration);
         punchVibrato = Mathf.Max(1, punchVibrato);
-        shootShakeIntensity = Mathf.Max(0f, shootShakeIntensity);
     }
 
     private void OnDisable()

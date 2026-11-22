@@ -1,0 +1,59 @@
+[
+  {
+    "name": "billy",
+    "version": "v7",
+    "sourceSheet": "public/previews/billy-v7/billy-sheet.png",
+    "sharedCrop": {
+      "left": 75,
+      "top": 6,
+      "width": 406,
+      "height": 471
+    },
+    "width": 420,
+    "height": 498,
+    "frames": 6,
+    "generatedPoses": 6,
+    "sequence": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "loopMode": "normal forward playback",
+    "delay": [
+      750,
+      160,
+      200,
+      200,
+      160,
+      650
+    ],
+    "bytes": 265251,
+    "gif": "billy-idle-v7.gif",
+    "poster": "billy-poster-v7.webp"
+  },
+  {
+    "name": "mandy",
+    "sourceSheet": "public/previews/characters-v1/mandy-sheet.png",
+    "sharedCrop": {
+      "left": 44,
+      "top": 7,
+      "width": 375,
+      "height": 454
+    },
+    "width": 420,
+    "height": 508,
+    "frames": 6,
+    "delay": [
+      950,
+      130,
+      90,
+      140,
+      160,
+      650
+    ],
+    "bytes": 312280
+  }
+]

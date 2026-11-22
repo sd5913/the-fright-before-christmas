@@ -1,0 +1,26 @@
+name: tfbc-score-tests
+
+services:
+  db:
+    image: postgres:17-bookworm
+    environment:
+      POSTGRES_USER: tfbc
+      POSTGRES_DB: tfbc_test
+      POSTGRES_PASSWORD: tfbc-test-only
+    tmpfs: [/var/lib/postgresql/data]
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U tfbc -d tfbc_test']
+      interval: 2s
+      timeout: 5s
+      retries: 20
+
+  tests:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      TEST_DATABASE_URL: postgresql://tfbc:tfbc-test-only@db:5432/tfbc_test
+    volumes:
+      - ./test:/app/test:ro
+    command: [sh, -c, 'npm test && npm run test:integration']

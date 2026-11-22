@@ -86,8 +86,15 @@ public class FakeHandShooter : MonoBehaviour
             return;
         }
 
+        if (_punchRoutine != null)
+        {
+            StopCoroutine(_punchRoutine);
+            _punchRoutine = null;
+        }
+
         firedProjectile.transform.SetParent(null, true);
         firedProjectile.transform.rotation = rotation;
+        firedProjectile.transform.localScale = projectilePrefab.transform.localScale;
 
         if (disableHeldColliders)
         {

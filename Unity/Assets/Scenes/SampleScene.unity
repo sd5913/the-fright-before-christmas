@@ -1540,7 +1540,7 @@ MonoBehaviour:
   throwUpReference: {fileID: 0}
   throwSpeed: 8.5
   upwardBoost: 1.4
-  fireCooldown: 0.2
+  fireRate: 0.2
   spawnForwardOffset: 0.06
   disableHeldColliders: 1
   punchOnSpawn: 1
@@ -2047,7 +2047,7 @@ MonoBehaviour:
   throwUpReference: {fileID: 0}
   throwSpeed: 8.5
   upwardBoost: 1.4
-  fireCooldown: 0.2
+  fireRate: 0.2
   spawnForwardOffset: 0.06
   disableHeldColliders: 1
   punchOnSpawn: 1
@@ -2785,7 +2785,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &762263121
 Transform:
   m_ObjectHideFlags: 0
@@ -5719,7 +5719,7 @@ MonoBehaviour:
   throwUpReference: {fileID: 0}
   throwSpeed: 8.5
   upwardBoost: 1.4
-  fireCooldown: 0.2
+  fireRate: 0.2
   spawnForwardOffset: 0.06
   disableHeldColliders: 1
   punchOnSpawn: 1

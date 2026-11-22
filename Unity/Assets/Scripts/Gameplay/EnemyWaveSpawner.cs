@@ -34,10 +34,33 @@ public class EnemyWaveSpawner : MonoBehaviour
     {
         while (enabled)
         {
+            var levelManager = LevelManager.Instance;
+            if (levelManager != null && levelManager.GameOver)
+            {
+                yield break;
+            }
+
+            if (levelManager == null || !levelManager.GameReady)
+            {
+                yield return null;
+                continue;
+            }
+
             var waitTime = Random.Range(spawnIntervalRange.x, spawnIntervalRange.y);
             if (waitTime > 0f)
             {
                 yield return new WaitForSeconds(waitTime);
+            }
+
+            levelManager = LevelManager.Instance;
+            if (levelManager == null || !levelManager.GameReady)
+            {
+                continue;
+            }
+
+            if (levelManager.GameOver)
+            {
+                yield break;
             }
 
             TrySpawnEnemy();

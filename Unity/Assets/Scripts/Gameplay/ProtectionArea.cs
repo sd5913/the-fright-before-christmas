@@ -111,6 +111,11 @@ public class ProtectionArea : MonoBehaviour
 
         if (currentHealth <= 0f)
         {
+            if (LevelManager.Instance != null)
+            {
+                LevelManager.Instance.SetGameOver(true);
+            }
+
             Destroy(gameObject);
         }
     }

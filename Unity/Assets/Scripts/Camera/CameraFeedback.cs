@@ -48,6 +48,7 @@ public class CameraFeedback : Singleton<CameraFeedback>
     private float _introElapsed;
     private float _introDelayRemaining;
     private bool _introActive;
+    private bool _introCompletionSignaled;
     private bool _logoFadeActive;
     private float _logoFadeElapsed;
     private float _logoFadeStartAlpha;
@@ -60,6 +61,11 @@ public class CameraFeedback : Singleton<CameraFeedback>
         _introDelayRemaining = introStartDelay;
         _introActive = playIntroMovement && introLength > 0f && introDuration > 0f;
         UpdateIntroFadeAlpha(_introActive ? 1f : 0f);
+
+        if (!_introActive)
+        {
+            SignalGameReady();
+        }
     }
 
     public void PlayDefaultShake(float intensityScale = 1f)
@@ -107,6 +113,7 @@ public class CameraFeedback : Singleton<CameraFeedback>
             return;
         }
 
+        SignalGameReady();
         UpdateLogoFadeOut();
         UpdateFollowX();
 
@@ -172,12 +179,26 @@ public class CameraFeedback : Singleton<CameraFeedback>
         {
             UpdateIntroFadeAlpha(0f);
             _introActive = false;
+            SignalGameReady();
             StartLogoFadeOut();
             return;
         }
 
         var deltaTime = useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
         _introElapsed += deltaTime;
+    }
+
+    private void SignalGameReady()
+    {
+        if (!_introCompletionSignaled)
+        {
+            _introCompletionSignaled = true;
+        }
+
+        if (LevelManager.Instance != null && !LevelManager.Instance.GameReady)
+        {
+            LevelManager.Instance.SetGameReady(true);
+        }
     }
 
     private void StartLogoFadeOut()

@@ -1,0 +1,55 @@
+{
+  "checkedAt": "2026-11-09T13:36:44.700Z",
+  "server": "http://localhost:4321",
+  "browser": "Chrome headless",
+  "note": "Iframe shell mocked for deterministic error/timeout tests; actual Unity smoke test reported separately.",
+  "results": [
+    "No game iframe or Unity requests before click",
+    "Double click creates one iframe; shell load does not claim Unity ready; effects paused",
+    "Back unloads iframe, restores scene and returns keyboard focus",
+    "Effects preference persists after reload",
+    "Hidden document pauses and visible document resumes effects",
+    "HTTP entry failure is recoverable; retry creates one fresh iframe",
+    "30-second timeout, retry and stale response isolation verified",
+    "System reduced motion overrides saved preference and stops scene animations",
+    "Desktop and 320/390/768px layouts have no horizontal overflow",
+    "Logo load failure displays title fallback",
+    "Skip link and keyboard activation work",
+    "Without JavaScript, explanatory fallback appears and game stays unloaded",
+    "No homepage JavaScript errors"
+  ],
+  "gameRequests": [
+    {
+      "url": "http://localhost:4321/game/index.html",
+      "method": "HEAD"
+    },
+    {
+      "url": "http://localhost:4321/game/index.html",
+      "method": "GET"
+    },
+    {
+      "url": "http://localhost:4321/game/index.html",
+      "method": "HEAD"
+    },
+    {
+      "url": "http://localhost:4321/game/index.html",
+      "method": "HEAD"
+    },
+    {
+      "url": "http://localhost:4321/game/index.html",
+      "method": "GET"
+    },
+    {
+      "url": "http://localhost:4321/game/index.html",
+      "method": "HEAD"
+    },
+    {
+      "url": "http://localhost:4321/game/index.html",
+      "method": "HEAD"
+    },
+    {
+      "url": "http://localhost:4321/game/index.html",
+      "method": "GET"
+    }
+  ]
+}

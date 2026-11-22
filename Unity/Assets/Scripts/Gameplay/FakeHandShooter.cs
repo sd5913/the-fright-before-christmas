@@ -56,7 +56,13 @@ public class FakeHandShooter : CharacterBehaviour
         {
             SpawnHeldProjectile();
         }
-        
+
+        var isFocused = gameCharacter != null && gameCharacter.IsFocused;
+        if (!isFocused)
+        {
+            return;
+        }
+
         if (Time.time < _nextFireTime || !MouseInputManager.GetLeftPressedThisFrame())
         {
             return;

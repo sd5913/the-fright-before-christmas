@@ -23,6 +23,11 @@ public class FakeHandMouseDriver : MonoBehaviour
     [SerializeField] private bool clampMinLocalY = true;
     [SerializeField] private float minLocalY;
 
+    [Header("Rotation")]
+    [SerializeField] private bool rotateToMouse = true;
+    [SerializeField] private float rotationSmoothSpeed = 16f;
+    [SerializeField] private Vector3 rotationEulerOffset;
+
     private Vector3 _velocity;
 
     private void LateUpdate()
@@ -77,14 +82,20 @@ public class FakeHandMouseDriver : MonoBehaviour
         {
             handTransform.position = targetPosition;
             _velocity = Vector3.zero;
-            return;
+        }
+        else
+        {
+            handTransform.position = Vector3.SmoothDamp(
+                handTransform.position,
+                targetPosition,
+                ref _velocity,
+                smoothTime);
         }
 
-        handTransform.position = Vector3.SmoothDamp(
-            handTransform.position,
-            targetPosition,
-            ref _velocity,
-            smoothTime);
+        if (rotateToMouse)
+        {
+            RotateTowardsMouse(mouseOnCharacterPlane, activeCamera);
+        }
     }
 
     private static Vector2 ClampToVerticalCapsule(float x, float y, float radius, float halfHeight)
@@ -130,6 +141,27 @@ public class FakeHandMouseDriver : MonoBehaviour
         capsuleRadius = Mathf.Max(0f, capsuleRadius);
         capsuleHalfHeight = Mathf.Max(0f, capsuleHalfHeight);
         smoothTime = Mathf.Max(0f, smoothTime);
+        rotationSmoothSpeed = Mathf.Max(0f, rotationSmoothSpeed);
+    }
+
+    private void RotateTowardsMouse(Vector3 mouseOnCharacterPlane, Camera activeCamera)
+    {
+        var aimDirection = mouseOnCharacterPlane - handTransform.position;
+        if (aimDirection.sqrMagnitude <= Mathf.Epsilon)
+        {
+            return;
+        }
+
+        var desiredRotation = Quaternion.LookRotation(aimDirection.normalized, activeCamera.transform.up) *
+                              Quaternion.Euler(rotationEulerOffset);
+        if (rotationSmoothSpeed <= 0f)
+        {
+            handTransform.rotation = desiredRotation;
+            return;
+        }
+
+        var t = 1f - Mathf.Exp(-rotationSmoothSpeed * Time.deltaTime);
+        handTransform.rotation = Quaternion.Slerp(handTransform.rotation, desiredRotation, t);
     }
 
 }

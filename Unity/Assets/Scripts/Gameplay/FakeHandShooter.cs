@@ -16,6 +16,12 @@ public class FakeHandShooter : MonoBehaviour
     [SerializeField] private float fireRate = 0.2f;
     [SerializeField] private float spawnForwardOffset = 0.06f;
 
+    [Header("Distance Scaling")]
+    [SerializeField] private bool scaleThrowByDistance = true;
+    [SerializeField] private float distanceForMaxThrow = 6f;
+    [SerializeField] private float minSpeedMultiplier = 0.3f;
+    [SerializeField] private float minUpwardMultiplier = 0.45f;
+
     [Header("Held Projectile")]
     [SerializeField] private bool disableHeldColliders = true;
 
@@ -76,7 +82,18 @@ public class FakeHandShooter : MonoBehaviour
             direction = handOrigin.forward;
         }
 
-        var initialVelocity = direction * throwSpeed + upAxis * upwardBoost;
+        var speed = throwSpeed;
+        var verticalBoost = upwardBoost;
+        if (scaleThrowByDistance)
+        {
+            var distance = Vector3.Distance(launchPosition, targetWorld);
+            var t = Mathf.Clamp01(distance / Mathf.Max(0.01f, distanceForMaxThrow));
+            t = t * t * (3f - 2f * t); // smoothstep
+            speed *= Mathf.Lerp(minSpeedMultiplier, 1f, t);
+            verticalBoost *= Mathf.Lerp(minUpwardMultiplier, 1f, t);
+        }
+
+        var initialVelocity = direction * speed + upAxis * verticalBoost;
         var rotation = initialVelocity.sqrMagnitude > 0.0001f
             ? Quaternion.LookRotation(initialVelocity.normalized, upAxis)
             : handOrigin.rotation;
@@ -133,6 +150,9 @@ public class FakeHandShooter : MonoBehaviour
     {
         throwSpeed = Mathf.Max(0.1f, throwSpeed);
         fireRate = Mathf.Max(0f, fireRate);
+        distanceForMaxThrow = Mathf.Max(0.01f, distanceForMaxThrow);
+        minSpeedMultiplier = Mathf.Clamp01(minSpeedMultiplier);
+        minUpwardMultiplier = Mathf.Clamp01(minUpwardMultiplier);
         punchAmount = Mathf.Max(0f, punchAmount);
         punchDuration = Mathf.Max(0.01f, punchDuration);
         punchVibrato = Mathf.Max(1, punchVibrato);

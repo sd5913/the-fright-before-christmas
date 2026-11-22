@@ -11,6 +11,7 @@ dist/
 .env.local
 *.env
 *.env.*
+!.env.example
 
 # Package manager logs & caches
 npm-debug.log*
@@ -92,11 +93,6 @@ InitTestScene*.unity*
 # Unity cache in Assets folder & plugins
 [Uu]nity/[Aa]ssets/[Ss]ceneDependencyCache*
 [Uu]nity/[Aa]ssets/Plugins/Editor/JetBrains*
-
-# Unity WebGL Build Artifacts (Keep large binaries out of git)
-public/game/Build/
-public/game/TemplateData/
-public/game/index.html
 
 # ==========================================
 # IDEs & System

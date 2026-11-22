@@ -1538,6 +1538,7 @@ MonoBehaviour:
   sourceCamera: {fileID: 330585545}
   projectilePrefab: {fileID: 6813212265894234542, guid: d7a51e1aec5212446b32779a5b5f9b97, type: 3}
   throwUpReference: {fileID: 0}
+  cameraShake: {fileID: 0}
   throwSpeed: 8.5
   upwardBoost: 1.4
   fireRate: 0.2
@@ -1547,6 +1548,7 @@ MonoBehaviour:
   punchAmount: 0.2
   punchDuration: 0.2
   punchVibrato: 2
+  shootShakeIntensity: 1
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -1559,6 +1561,7 @@ GameObject:
   - component: {fileID: 330585545}
   - component: {fileID: 330585544}
   - component: {fileID: 330585547}
+  - component: {fileID: 330585548}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1684,6 +1687,23 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!114 &330585548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330585543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35fcbfa0680de5d44aff6a519b087bbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraShakeController
+  defaultDuration: 0.16
+  defaultPositionAmplitude: 0.045
+  defaultRotationAmplitude: {x: 1.8, y: 1.8, z: 0.7}
+  defaultFrequency: 28
+  useUnscaledTime: 0
 --- !u!1 &341786307
 GameObject:
   m_ObjectHideFlags: 0
@@ -2045,6 +2065,7 @@ MonoBehaviour:
   sourceCamera: {fileID: 330585545}
   projectilePrefab: {fileID: 6813212265894234542, guid: d7a51e1aec5212446b32779a5b5f9b97, type: 3}
   throwUpReference: {fileID: 0}
+  cameraShake: {fileID: 330585548}
   throwSpeed: 8.5
   upwardBoost: 1.4
   fireRate: 0.2
@@ -2054,6 +2075,7 @@ MonoBehaviour:
   punchAmount: 0.2
   punchDuration: 0.2
   punchVibrato: 2
+  shootShakeIntensity: 1
 --- !u!1 &465886970
 GameObject:
   m_ObjectHideFlags: 0
@@ -5717,6 +5739,7 @@ MonoBehaviour:
   sourceCamera: {fileID: 330585545}
   projectilePrefab: {fileID: 6813212265894234542, guid: d7a51e1aec5212446b32779a5b5f9b97, type: 3}
   throwUpReference: {fileID: 0}
+  cameraShake: {fileID: 0}
   throwSpeed: 8.5
   upwardBoost: 1.4
   fireRate: 0.2
@@ -5726,6 +5749,7 @@ MonoBehaviour:
   punchAmount: 0.2
   punchDuration: 0.2
   punchVibrato: 2
+  shootShakeIntensity: 1
 --- !u!1 &2109067952
 GameObject:
   m_ObjectHideFlags: 0

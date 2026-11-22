@@ -1529,7 +1529,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 271887625}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: acbafc47fbad55d469bdf9b079d9f793, type: 3}
   m_Name: 
@@ -1542,6 +1542,11 @@ MonoBehaviour:
   upwardBoost: 1.4
   fireCooldown: 0.2
   spawnForwardOffset: 0.06
+  disableHeldColliders: 1
+  punchOnSpawn: 1
+  punchAmount: 0.2
+  punchDuration: 0.2
+  punchVibrato: 2
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -2044,6 +2049,11 @@ MonoBehaviour:
   upwardBoost: 1.4
   fireCooldown: 0.2
   spawnForwardOffset: 0.06
+  disableHeldColliders: 1
+  punchOnSpawn: 1
+  punchAmount: 0.2
+  punchDuration: 0.2
+  punchVibrato: 2
 --- !u!1 &465886970
 GameObject:
   m_ObjectHideFlags: 0
@@ -5698,7 +5708,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2101827895}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: acbafc47fbad55d469bdf9b079d9f793, type: 3}
   m_Name: 
@@ -5711,6 +5721,11 @@ MonoBehaviour:
   upwardBoost: 1.4
   fireCooldown: 0.2
   spawnForwardOffset: 0.06
+  disableHeldColliders: 1
+  punchOnSpawn: 1
+  punchAmount: 0.2
+  punchDuration: 0.2
+  punchVibrato: 2
 --- !u!1 &2109067952
 GameObject:
   m_ObjectHideFlags: 0

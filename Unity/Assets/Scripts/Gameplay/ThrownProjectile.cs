@@ -24,27 +24,44 @@ public class ThrownProjectile : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
     }
 
-    private void OnEnable()
-    {
-        if (destroyAfterSeconds > 0f)
-        {
-            _destroyAt = Time.time + destroyAfterSeconds;
-        }
-    }
-
     public void Launch(Vector3 initialVelocity)
     {
         _isLaunched = true;
         _velocity = initialVelocity;
+        if (destroyAfterSeconds > 0f)
+        {
+            _destroyAt = Time.time + destroyAfterSeconds;
+        }
 
         if (_rigidbody != null)
         {
+            _rigidbody.isKinematic = false;
             _rigidbody.useGravity = true;
             _rigidbody.velocity = initialVelocity;
             if (applySpin)
             {
                 _rigidbody.angularVelocity = spinDegreesPerSecond * Mathf.Deg2Rad;
             }
+        }
+    }
+
+    public void SetHeldState(bool isHeld)
+    {
+        if (!isHeld)
+        {
+            return;
+        }
+
+        _isLaunched = false;
+        _velocity = Vector3.zero;
+        _destroyAt = 0f;
+
+        if (_rigidbody != null)
+        {
+            _rigidbody.velocity = Vector3.zero;
+            _rigidbody.angularVelocity = Vector3.zero;
+            _rigidbody.useGravity = false;
+            _rigidbody.isKinematic = true;
         }
     }
 

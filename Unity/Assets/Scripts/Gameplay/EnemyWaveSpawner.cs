@@ -68,26 +68,23 @@ public class EnemyWaveSpawner : MonoBehaviour
 
     private bool TryBuildEdgeSpawnPosition(Camera activeCamera, float spawnZ, out Vector3 spawnPosition)
     {
-        var side = Random.Range(0, 4);
+        var side = Random.Range(0, 3);
         var sideT = Random.value;
+        var upperHalfT = Random.Range(0.5f, 1f);
 
         float viewportX;
         float viewportY;
         switch (side)
         {
-            case 0: // Left
+            case 0: // Left (upper half only)
                 viewportX = -edgeViewportPadding;
-                viewportY = sideT;
+                viewportY = upperHalfT;
                 break;
-            case 1: // Right
+            case 1: // Right (upper half only)
                 viewportX = 1f + edgeViewportPadding;
-                viewportY = sideT;
+                viewportY = upperHalfT;
                 break;
-            case 2: // Bottom
-                viewportX = sideT;
-                viewportY = -edgeViewportPadding;
-                break;
-            default: // Top
+            default: // Top (full width)
                 viewportX = sideT;
                 viewportY = 1f + edgeViewportPadding;
                 break;

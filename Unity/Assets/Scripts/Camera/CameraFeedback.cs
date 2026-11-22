@@ -3,7 +3,7 @@ using Framework;
 using UnityEngine;
 
 [DisallowMultipleComponent]
-public class CameraShakeController : Singleton<CameraShakeController>
+public class CameraFeedback : Singleton<CameraFeedback>
 {
     private sealed class ActiveShake
     {
@@ -21,6 +21,12 @@ public class CameraShakeController : Singleton<CameraShakeController>
     [SerializeField] private Vector3 defaultRotationAmplitude = new Vector3(1.8f, 1.8f, 0.7f);
     [SerializeField] private float defaultFrequency = 28f;
     [SerializeField] private bool useUnscaledTime;
+    
+    [Header("Focused Character Follow")]
+    [SerializeField] private bool followFocusedCharacterX = true;
+    [SerializeField] private CharacterSwapper characterSwapper;
+    [SerializeField] private float followLerpSpeed = 8f;
+    [SerializeField] private float followXOffset;
 
     private readonly List<ActiveShake> _activeShakes = new List<ActiveShake>();
     private Vector3 _lastPositionOffset;
@@ -64,6 +70,8 @@ public class CameraShakeController : Singleton<CameraShakeController>
     private void LateUpdate()
     {
         RestorePreviousOffset();
+        UpdateFollowX();
+
         if (_activeShakes.Count == 0)
         {
             return;
@@ -106,6 +114,29 @@ public class CameraShakeController : Singleton<CameraShakeController>
         _lastRotationOffset = rotationOffset;
     }
 
+    private void UpdateFollowX()
+    {
+        if (!followFocusedCharacterX)
+        {
+            return;
+        }
+
+        var swapper = characterSwapper != null ? characterSwapper : FindAnyObjectByType<CharacterSwapper>();
+        if (swapper == null || swapper.FocusedCharacter == null)
+        {
+            return;
+        }
+
+        characterSwapper = swapper;
+
+        var targetX = swapper.FocusedCharacter.transform.position.x + followXOffset;
+        var current = transform.position;
+        var deltaTime = useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
+        var t = followLerpSpeed <= 0f ? 1f : 1f - Mathf.Exp(-followLerpSpeed * deltaTime);
+        current.x = Mathf.Lerp(current.x, targetX, t);
+        transform.position = current;
+    }
+
     private void RestorePreviousOffset()
     {
         if (_lastPositionOffset.sqrMagnitude <= Mathf.Epsilon && _lastRotationOffset.sqrMagnitude <= Mathf.Epsilon)
@@ -130,5 +161,6 @@ public class CameraShakeController : Singleton<CameraShakeController>
         defaultDuration = Mathf.Max(0.01f, defaultDuration);
         defaultPositionAmplitude = Mathf.Max(0f, defaultPositionAmplitude);
         defaultFrequency = Mathf.Max(0.01f, defaultFrequency);
+        followLerpSpeed = Mathf.Max(0f, followLerpSpeed);
     }
 }

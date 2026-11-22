@@ -7,7 +7,9 @@ public class CharacterSwapper : MonoBehaviour
     private GameCharacter[] m_characters;
 
     private int currentCharacterIndex = -1;
-    
+
+    public GameCharacter FocusedCharacter { get; private set; }
+
     private void Start()
     {
         m_characters = GetComponentsInChildren<GameCharacter>();
@@ -31,5 +33,7 @@ public class CharacterSwapper : MonoBehaviour
         {
             m_characters[i].IsFocused = i == index;
         }
+
+        FocusedCharacter = m_characters[index];
     }
 }

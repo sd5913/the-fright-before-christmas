@@ -1721,12 +1721,16 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 35fcbfa0680de5d44aff6a519b087bbe, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CameraShakeController
+  m_EditorClassIdentifier: Assembly-CSharp::CameraFeedback
   defaultDuration: 0.16
   defaultPositionAmplitude: 0.045
   defaultRotationAmplitude: {x: 1.8, y: 1.8, z: 0.7}
   defaultFrequency: 28
-  useUnscaledTime: 0
+  useUnscaledTime: 1
+  followFocusedCharacterX: 1
+  characterSwapper: {fileID: 651475716}
+  followLerpSpeed: 8
+  followXOffset: 0
 --- !u!1 &341786307
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,5 +1,4 @@
 using System.Collections;
-using Framework;
 using UnityEngine;
 
 [DisallowMultipleComponent]
@@ -66,11 +65,6 @@ public class FakeHandShooter : CharacterBehaviour
         if (Time.time < _nextFireTime || !MouseInputManager.GetLeftPressedThisFrame())
         {
             return;
-        }
-
-        if (gameCharacter.IsFocused)
-        {
-            this.Log($"{gameCharacter.name} is focused");
         }
 
         var activeCamera = sourceCamera != null ? sourceCamera : Camera.main;
@@ -149,9 +143,9 @@ public class FakeHandShooter : CharacterBehaviour
             rigidbody.velocity = initialVelocity;
         }
 
-        if (CameraShakeController.Instance != null)
+        if (CameraFeedback.Instance != null)
         {
-            CameraShakeController.Instance.PlayDefaultShake(shootShakeIntensity);
+            CameraFeedback.Instance.PlayDefaultShake(shootShakeIntensity);
         }
 
         _nextFireTime = Time.time + fireRate;

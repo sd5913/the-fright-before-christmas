@@ -1415,6 +1415,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 402e8500dc1ff6743a1172b637a27d29, type: 3}
       insertIndex: -1
       addedObject: {fileID: 271887631}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 402e8500dc1ff6743a1172b637a27d29, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 271887632}
     - targetCorrespondingSourceObject: {fileID: 3948933247560734027, guid: 402e8500dc1ff6743a1172b637a27d29, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1905011877}
@@ -1555,6 +1558,18 @@ MonoBehaviour:
   punchDuration: 0.2
   punchVibrato: 2
   shootShakeIntensity: 1
+--- !u!114 &271887632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 271887625}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c0d844b975d65c488f5521c7b2e5dc6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameCharacter
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -1948,6 +1963,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 07e9ae00be2ca854db21014bd0bfee9d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 450037041}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 07e9ae00be2ca854db21014bd0bfee9d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 450037042}
     - targetCorrespondingSourceObject: {fileID: -6370085079684087283, guid: 07e9ae00be2ca854db21014bd0bfee9d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 147331833}
@@ -2088,6 +2106,18 @@ MonoBehaviour:
   punchDuration: 0.2
   punchVibrato: 2
   shootShakeIntensity: 1
+--- !u!114 &450037042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 450037035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c0d844b975d65c488f5521c7b2e5dc6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameCharacter
 --- !u!1 &465886970
 GameObject:
   m_ObjectHideFlags: 0
@@ -2453,7 +2483,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 651475715}
-  - component: {fileID: 651475716}
   m_Layer: 0
   m_Name: Characters
   m_TagString: Untagged
@@ -2482,18 +2511,6 @@ Transform:
   - {fileID: 1285492054}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &651475716
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 651475714}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1cad0260b79642342a744cfedb49a9f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CharacterSwapController
 --- !u!1 &655734358
 GameObject:
   m_ObjectHideFlags: 0
@@ -5597,6 +5614,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0e4650d437e23b948970484e19a56e2e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2101827901}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0e4650d437e23b948970484e19a56e2e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2101827902}
     - targetCorrespondingSourceObject: {fileID: 8817898888258712963, guid: 0e4650d437e23b948970484e19a56e2e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 662876097}
@@ -5737,6 +5757,18 @@ MonoBehaviour:
   punchDuration: 0.2
   punchVibrato: 2
   shootShakeIntensity: 1
+--- !u!114 &2101827902
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2101827895}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c0d844b975d65c488f5521c7b2e5dc6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameCharacter
 --- !u!1 &2109067952
 GameObject:
   m_ObjectHideFlags: 0

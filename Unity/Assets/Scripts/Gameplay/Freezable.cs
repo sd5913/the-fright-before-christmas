@@ -14,6 +14,7 @@ public class Freezable : MonoBehaviour
     [SerializeField] private float icePunchScaleMultiplier = 1.15f;
     [SerializeField] private float icePunchDuration = 0.18f;
     [SerializeField] private float autoUnfreezeDelay = 3f;
+    [SerializeField] private float hitShakeIntensity = 1f;
 
     private Coroutine _animSpeedRoutine;
     private Coroutine _icePunchRoutine;
@@ -25,6 +26,32 @@ public class Freezable : MonoBehaviour
         if (iceCube != null)
         {
             _iceBaseScale = iceCube.localScale;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other == null)
+        {
+            return;
+        }
+
+        var freezer = other.GetComponent<Freezer>() ?? other.GetComponentInParent<Freezer>();
+        if (freezer == null || freezer.gameObject == gameObject)
+        {
+            return;
+        }
+
+        if (CameraFeedback.Instance != null && hitShakeIntensity > 0f)
+        {
+            CameraFeedback.Instance.PlayDefaultShake(hitShakeIntensity);
+        }
+
+        Destroy(freezer.gameObject);
+
+        if (!IsFreezed)
+        {
+            Freeze();
         }
     }
     
@@ -209,5 +236,6 @@ public class Freezable : MonoBehaviour
         autoUnfreezeDelay = Mathf.Max(0f, autoUnfreezeDelay);
         icePunchDuration = Mathf.Max(0.01f, icePunchDuration);
         icePunchScaleMultiplier = Mathf.Max(1f, icePunchScaleMultiplier);
+        hitShakeIntensity = Mathf.Max(0f, hitShakeIntensity);
     }
 }

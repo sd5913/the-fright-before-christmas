@@ -1,0 +1,83 @@
+{
+  "date": "2026-11-11",
+  "scope": "Browser fixtures plus a read-only public API check; no production score submissions",
+  "results": [
+    {
+      "name": "Homepage does not request scores or load Unity before interaction",
+      "passed": true
+    },
+    {
+      "name": "Public API renders its actual response without fixture scores",
+      "passed": true,
+      "actualScoreCount": 0
+    },
+    {
+      "name": "Loading contains no invented scores and disables duplicate refreshes",
+      "passed": true
+    },
+    {
+      "name": "Ten scores stay visible across desktop and mobile layouts",
+      "passed": true,
+      "layouts": [
+        {
+          "width": 1920,
+          "height": 980,
+          "overflow": false
+        },
+        {
+          "width": 1536,
+          "height": 744,
+          "overflow": false
+        },
+        {
+          "width": 1366,
+          "height": 640,
+          "overflow": false
+        },
+        {
+          "width": 1024,
+          "height": 576,
+          "overflow": false
+        },
+        {
+          "width": 390,
+          "height": 744,
+          "overflow": false
+        },
+        {
+          "width": 320,
+          "height": 640,
+          "overflow": false
+        }
+      ]
+    },
+    {
+      "name": "Empty and partial boards leave unclaimed positions without fake entries",
+      "passed": true
+    },
+    {
+      "name": "Initial HTTP failure recovers through the retry button",
+      "passed": true
+    },
+    {
+      "name": "Refresh failure explicitly marks the retained last successful scores",
+      "passed": true
+    },
+    {
+      "name": "Network failure and malformed API responses never create fallback scores",
+      "passed": true
+    },
+    {
+      "name": "Slow requests time out and cannot overwrite a newer successful retry",
+      "passed": true
+    },
+    {
+      "name": "Player names stay text and signed 32-bit scores fit narrow screens",
+      "passed": true
+    },
+    {
+      "name": "No-JavaScript users get an explanation and working navigation",
+      "passed": true
+    }
+  ]
+}

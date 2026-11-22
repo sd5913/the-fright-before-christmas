@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [DisallowMultipleComponent]
-public class MouseHeadLookTargetDriver : MonoBehaviour
+public class MouseHeadLookTargetDriver : CharacterBehaviour
 {
     private enum TargetingMode
     {
@@ -35,7 +35,7 @@ public class MouseHeadLookTargetDriver : MonoBehaviour
 
     private Vector3 _targetVelocity;
 
-    private void Update()
+    protected override void OnUpdate(float deltaTime)
     {
         if (characterRoot == null || headPivot == null || lookTarget == null)
         {
@@ -156,5 +156,4 @@ public class MouseHeadLookTargetDriver : MonoBehaviour
         lookDistance = Mathf.Max(0.1f, lookDistance);
         smoothTime = Mathf.Max(0f, smoothTime);
     }
-
 }

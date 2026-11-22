@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 
 [DisallowMultipleComponent]
-public class FakeHandShooter : MonoBehaviour
+public class FakeHandShooter : CharacterBehaviour
 {
     [Header("References")]
     [SerializeField] private Transform handOrigin;
@@ -44,7 +44,7 @@ public class FakeHandShooter : MonoBehaviour
         SpawnHeldProjectile();
     }
 
-    private void Update()
+    protected override void OnUpdate(float deltaTime)
     {
         if (handOrigin == null || projectilePrefab == null)
         {

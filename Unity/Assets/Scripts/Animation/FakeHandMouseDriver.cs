@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [DisallowMultipleComponent]
-public class FakeHandMouseDriver : MonoBehaviour
+public class FakeHandMouseDriver : CharacterBehaviour
 {
     [Header("References")]
     [SerializeField] private Transform characterRoot;
@@ -30,7 +30,12 @@ public class FakeHandMouseDriver : MonoBehaviour
 
     private Vector3 _velocity;
 
-    private void LateUpdate()
+    protected override CharacterUpdatePhase GetUpdatePhase()
+    {
+        return CharacterUpdatePhase.LateUpdate;
+    }
+
+    protected override void OnUpdate(float deltaTime)
     {
         if (characterRoot == null || handTransform == null)
         {
@@ -94,7 +99,7 @@ public class FakeHandMouseDriver : MonoBehaviour
 
         if (rotateToMouse)
         {
-            RotateTowardsMouse(mouseOnCharacterPlane, activeCamera);
+            RotateTowardsMouse(mouseOnCharacterPlane, activeCamera, deltaTime);
         }
     }
 
@@ -144,7 +149,7 @@ public class FakeHandMouseDriver : MonoBehaviour
         rotationSmoothSpeed = Mathf.Max(0f, rotationSmoothSpeed);
     }
 
-    private void RotateTowardsMouse(Vector3 mouseOnCharacterPlane, Camera activeCamera)
+    private void RotateTowardsMouse(Vector3 mouseOnCharacterPlane, Camera activeCamera, float deltaTime)
     {
         var aimDirection = mouseOnCharacterPlane - handTransform.position;
         if (aimDirection.sqrMagnitude <= Mathf.Epsilon)
@@ -160,7 +165,7 @@ public class FakeHandMouseDriver : MonoBehaviour
             return;
         }
 
-        var t = 1f - Mathf.Exp(-rotationSmoothSpeed * Time.deltaTime);
+        var t = 1f - Mathf.Exp(-rotationSmoothSpeed * deltaTime);
         handTransform.rotation = Quaternion.Slerp(handTransform.rotation, desiredRotation, t);
     }
 

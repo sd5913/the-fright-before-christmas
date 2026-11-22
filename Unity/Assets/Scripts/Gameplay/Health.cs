@@ -74,8 +74,6 @@ public class Health : MonoBehaviour
             CameraFeedback.Instance.PlayDefaultShake(hitShakeIntensity);
         }
         
-        this.Log($"Current health: {currentHealth}");
-
         if (currentHealth <= 0f)
         {
             onDeath?.Invoke();

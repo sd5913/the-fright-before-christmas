@@ -1567,6 +1567,32 @@ MonoBehaviour:
   introLogoSprite: {fileID: 389307653}
   introLogoFadeDelay: 0
   introLogoFadeDuration: 1
+  playGameOverOutro: 1
+  gameOverReturnDuration: 1.5
+  gameOverReturnEase:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &341786307
 GameObject:
   m_ObjectHideFlags: 0
@@ -2889,7 +2915,7 @@ MonoBehaviour:
   useEnemyPrefabZPosition: 1
   spawnZPosition: 0.11
   edgeViewportPadding: 0.08
-  spawnIntervalRange: {x: 1.2, y: 2.2}
+  spawnIntervalRange: {x: 1.2, y: 2}
 --- !u!1 &784042704
 GameObject:
   m_ObjectHideFlags: 0
@@ -3651,6 +3677,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 919428228}
+  - {fileID: 1454440974}
   m_Father: {fileID: 271887627}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &1160766994
@@ -3777,6 +3804,57 @@ Transform:
   m_Children: []
   m_Father: {fileID: 271887627}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1454440973
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1454440974}
+  - component: {fileID: 1454440975}
+  m_Layer: 0
+  m_Name: LootCollector
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1454440974
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1454440973}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.59824586, z: -0, w: 0.8013126}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1160766993}
+  m_LocalEulerAnglesHint: {x: 0, y: -73.489, z: 0}
+--- !u!114 &1454440975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1454440973}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7f3fff921573194fa1e5907c9655f7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LootCollector
+  collectRange: 8
+  collectConeAngle: 45
+  vacuumLerpSpeed: 3
+  rotationLerpSpeed: 10
+  shrinkLerpSpeed: 4
+  maxCollectDuration: 2
+  onlyWhenFocused: 1
 --- !u!1 &1558453448
 GameObject:
   m_ObjectHideFlags: 0

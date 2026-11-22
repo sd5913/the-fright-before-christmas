@@ -166,7 +166,7 @@ MonoBehaviour:
   normalAnimatorSpeed: 1
   icePunchScaleMultiplier: 1.15
   icePunchDuration: 0.18
-  autoUnfreezeDelay: 3
+  autoUnfreezeDelay: 6
   hitShakeIntensity: 1
 --- !u!114 &1851897368086850706
 MonoBehaviour:

@@ -2206,7 +2206,7 @@ Transform:
   m_GameObject: {fileID: 581724476}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.53, y: -1.01, z: 0.65}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3472,6 +3472,18 @@ PrefabInstance:
     m_TransformParent: {fileID: 581724477}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: c93fbc095f161f14fbf0de4ba841dff5, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.58988
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c93fbc095f161f14fbf0de4ba841dff5, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.58988
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c93fbc095f161f14fbf0de4ba841dff5, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.58988
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c93fbc095f161f14fbf0de4ba841dff5, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -4112,6 +4124,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1968339628}
+  - component: {fileID: 1968339629}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -4127,15 +4140,35 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1968339627}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.16078, y: 1.65115, z: 0.85622}
+  m_LocalRotation: {x: -0, y: 0.4713327, z: -0, w: 0.88195556}
+  m_LocalPosition: {x: 0.75, y: 2.54, z: 1.18}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 581724477}
   - {fileID: 543450652900167093}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 56.242, z: 0}
+--- !u!114 &1968339629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1968339627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53ae2cc1fe03b3d45b69373a0789c761, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameEnemy
+  iceCube: {fileID: 543450652900167093}
+  animator: {fileID: 1497169846}
+  freezeRampDuration: 0.25
+  unfreezeRampDuration: 0.25
+  frozenAnimatorSpeed: 0
+  normalAnimatorSpeed: 1
+  icePunchScaleMultiplier: 1.15
+  icePunchDuration: 0.18
 --- !u!1 &1977595740
 GameObject:
   m_ObjectHideFlags: 0
@@ -4785,8 +4818,8 @@ Transform:
   m_GameObject: {fileID: 919132148913526543}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.45922005, y: -0.50038004, z: 0.37545002}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0.01, y: 0.33, z: -0.14}
+  m_LocalScale: {x: 0.5242217, y: 0.5242217, z: 0.5242217}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3745622627535591120}
@@ -4859,7 +4892,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &919132149234399782
 GameObject:
   m_ObjectHideFlags: 0

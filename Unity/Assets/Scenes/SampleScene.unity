@@ -4125,6 +4125,7 @@ GameObject:
   - component: {fileID: 1968339629}
   - component: {fileID: 1968339630}
   - component: {fileID: 1968339631}
+  - component: {fileID: 1968339632}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -4205,6 +4206,18 @@ MonoBehaviour:
   icePunchDuration: 0.18
   autoUnfreezeDelay: 3
   hitShakeIntensity: 1
+--- !u!114 &1968339632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1968339627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cea3931404c40974c8dcc6a81257fa8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Health
 --- !u!1 &1977595740
 GameObject:
   m_ObjectHideFlags: 0

@@ -114,6 +114,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameEnemy
   freezable: {fileID: 86149209917540590}
+  moveSpeed: 2.5
+  useInitialZPosition: 1
+  fixedZPosition: 0
+  protectionArea: {fileID: 0}
+  randomTargetRefreshInterval: 1.5
+  randomTargetReachDistance: 0.2
+  rotateTowardMovement: 1
+  rotationLerpSpeed: 12
 --- !u!65 &4056610755011775174
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -275,15 +283,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: c93fbc095f161f14fbf0de4ba841dff5, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.58988
+      value: 0.44783095
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c93fbc095f161f14fbf0de4ba841dff5, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.58988
+      value: 0.44783095
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c93fbc095f161f14fbf0de4ba841dff5, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.58988
+      value: 0.44783095
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c93fbc095f161f14fbf0de4ba841dff5, type: 3}
       propertyPath: m_LocalPosition.x

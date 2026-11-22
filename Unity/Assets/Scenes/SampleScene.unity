@@ -2798,7 +2798,7 @@ MonoBehaviour:
   useEnemyPrefabZPosition: 1
   spawnZPosition: 0.11
   edgeViewportPadding: 0.08
-  spawnIntervalRange: {x: 0.8, y: 1.6}
+  spawnIntervalRange: {x: 1, y: 2}
 --- !u!1 &784042704
 GameObject:
   m_ObjectHideFlags: 0

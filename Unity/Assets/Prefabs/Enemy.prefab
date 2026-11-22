@@ -77,6 +77,7 @@ GameObject:
   - component: {fileID: 4056610755011775174}
   - component: {fileID: 86149209917540590}
   - component: {fileID: 1851897368086850706}
+  - component: {fileID: -1022574005178071545}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -122,6 +123,8 @@ MonoBehaviour:
   randomTargetReachDistance: 0.2
   rotateTowardMovement: 1
   rotationLerpSpeed: 12
+  gameOverEscapeSpeedMultiplier: 1.35
+  gameOverEscapeViewportPadding: 0.2
 --- !u!65 &4056610755011775174
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -183,6 +186,22 @@ MonoBehaviour:
   damageFlashColor: {r: 1, g: 0, b: 0, a: 1}
   damageFlashDuration: 0.2
   damageFlashRenderers: []
+--- !u!114 &-1022574005178071545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3510165226640840148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33472095e873b4b4fabdc1394cd50ec6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Loot
+  prefabToSpawn: {fileID: 7591973824048810061, guid: 31285b8ae179f0143bb527f90955ce15, type: 3}
+  punchAmount: 0.2
+  punchDuration: 0.2
+  punchVibrato: 2
 --- !u!1 &4524671883568507183
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Framework;
 using UnityEngine;
 
 public class Health : MonoBehaviour
@@ -20,6 +22,8 @@ public class Health : MonoBehaviour
     private MaterialPropertyBlock[] _damageFlashBlocks;
     private Color[] _damageFlashBaseColors;
     private bool[] _damageFlashUsesBaseColor;
+
+    public Action onDeath;
 
     private void Awake()
     {
@@ -55,6 +59,10 @@ public class Health : MonoBehaviour
     {
         if (damage <= 0f || currentHealth <= 0f)
         {
+            if (currentHealth <= 0)
+            {
+                this.LogError("Already dead");
+            }
             return;
         }
 
@@ -65,9 +73,12 @@ public class Health : MonoBehaviour
         {
             CameraFeedback.Instance.PlayDefaultShake(hitShakeIntensity);
         }
+        
+        this.Log($"Current health: {currentHealth}");
 
         if (currentHealth <= 0f)
         {
+            onDeath?.Invoke();
             Destroy(gameObject);
         }
     }

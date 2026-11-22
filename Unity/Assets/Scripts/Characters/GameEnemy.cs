@@ -9,6 +9,8 @@ public class GameEnemy : MonoBehaviour
     [SerializeField] private ProtectionArea protectionArea;
     [SerializeField] private float randomTargetRefreshInterval = 1.5f;
     [SerializeField] private float randomTargetReachDistance = 0.2f;
+    [SerializeField] private bool rotateTowardMovement = true;
+    [SerializeField] private float rotationLerpSpeed = 12f;
 
     private BoxCollider _protectionAreaCollider;
     private Vector2 _currentTargetXY;
@@ -54,6 +56,23 @@ public class GameEnemy : MonoBehaviour
             currentXY,
             _currentTargetXY,
             moveSpeed * Time.deltaTime);
+
+        var moveDirection = movedXY - currentXY;
+        if (rotateTowardMovement && moveDirection.sqrMagnitude > 0.000001f)
+        {
+            // Enemy eyes point toward local -forward, so invert direction here.
+            var desiredRotation = Quaternion.LookRotation(
+                new Vector3(-moveDirection.x, -moveDirection.y, 0f),
+                Vector3.forward);
+
+            var nextRotation = rotationLerpSpeed <= 0f
+                ? desiredRotation
+                : Quaternion.Slerp(transform.rotation, desiredRotation, 1f - Mathf.Exp(-rotationLerpSpeed * Time.deltaTime));
+
+            var euler = nextRotation.eulerAngles;
+            euler.z = 0f;
+            transform.rotation = Quaternion.Euler(euler);
+        }
 
         transform.position = new Vector3(movedXY.x, movedXY.y, fixedZPosition);
     }
@@ -108,5 +127,6 @@ public class GameEnemy : MonoBehaviour
         moveSpeed = Mathf.Max(0f, moveSpeed);
         randomTargetRefreshInterval = Mathf.Max(0.01f, randomTargetRefreshInterval);
         randomTargetReachDistance = Mathf.Max(0.01f, randomTargetReachDistance);
+        rotationLerpSpeed = Mathf.Max(0f, rotationLerpSpeed);
     }
 }

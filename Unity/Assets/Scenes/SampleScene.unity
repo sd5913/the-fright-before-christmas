@@ -4584,6 +4584,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameOverUI
   m_cg: {fileID: 1305076308}
+  m_punchTarget: {fileID: 1305076307}
+  m_restartButtonPunchTarget: {fileID: 476292972}
+  m_punchAmount: 0.18
+  m_punchDuration: 0.2
+  m_punchVibrato: 2
+  m_restartFadeDuration: 0.3
 --- !u!1 &1306860055
 GameObject:
   m_ObjectHideFlags: 0

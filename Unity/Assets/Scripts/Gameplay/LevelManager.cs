@@ -6,6 +6,7 @@ using UnityEngine;
 public enum GameEvent
 {
     GameReady,
+    GameOver,
 }
 
 public class LevelManager : Singleton<LevelManager>
@@ -52,6 +53,7 @@ public class LevelManager : Singleton<LevelManager>
         if (value)
         {
             GameReady = false;
+            FrameworkEventsFactory.Raise(GameEvent.GameOver);
         }
     }
 }

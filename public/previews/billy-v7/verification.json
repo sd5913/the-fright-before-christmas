@@ -1,0 +1,36 @@
+{
+  "date": "2026-11-10",
+  "method": "New single 3x2 six-cell image; source cells 1 through 6 played once in forward order; no reverse playback, copied end frame or interpolation",
+  "version": "v7",
+  "sourceSheet": "public/previews/billy-v7/billy-sheet.png",
+  "sharedCrop": {
+    "left": 75,
+    "top": 6,
+    "width": 406,
+    "height": 471
+  },
+  "width": 420,
+  "height": 498,
+  "frames": 6,
+  "uniqueSourceFrames": 6,
+  "sequence": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "delay": [
+    750,
+    160,
+    200,
+    200,
+    160,
+    650
+  ],
+  "loopDurationMs": 2120,
+  "firstLastMeanRGBDifference": 4.438936622006115,
+  "previousV6FirstLastMeanRGBDifference": 34.66591933165869,
+  "metricNote": "Pixel difference over the visible union, descriptive only; does not establish perceptual quality or identical poses"
+}

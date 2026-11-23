@@ -114,6 +114,11 @@ public class GameOverUI : MonoBehaviour
 
     private IEnumerator RestartRoutine()
     {
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.FadeToMuted(m_restartFadeDuration);
+        }
+
         if (m_cg != null)
         {
             m_cg.interactable = false;

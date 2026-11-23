@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -19,6 +20,8 @@ public class LootItem : MonoBehaviour
     private float _shrinkLerpSpeed;
     private float _maxCollectDuration;
     private float _collectElapsed;
+
+    public static Action OnLootCollected;
 
     private void OnEnable()
     {
@@ -54,8 +57,9 @@ public class LootItem : MonoBehaviour
         transform.localScale = Vector3.Lerp(transform.localScale, Vector3.zero, scaleT);
 
         if (Vector3.Distance(transform.position, targetPosition) <= collectCompleteDistance
-            || _collectElapsed >= _maxCollectDuration)
+            || _collectElapsed >= _maxCollectDuration || transform.localScale == Vector3.zero)
         {
+            OnLootCollected?.Invoke();
             Destroy(gameObject);
         }
     }
@@ -97,7 +101,7 @@ public class LootItem : MonoBehaviour
             return;
         }
 
-        rigidbody.velocity = Vector3.zero;
+        rigidbody.linearVelocity = Vector3.zero;
         rigidbody.angularVelocity = Vector3.zero;
         rigidbody.isKinematic = !active;
         rigidbody.useGravity = active;

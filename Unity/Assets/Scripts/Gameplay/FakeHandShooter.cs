@@ -137,7 +137,7 @@ public class FakeHandShooter : CharacterBehaviour
         {
             rigidbody.isKinematic = false;
             rigidbody.useGravity = true;
-            rigidbody.velocity = initialVelocity;
+            rigidbody.linearVelocity = initialVelocity;
         }
 
         _nextFireTime = Time.time + fireRate;
@@ -189,7 +189,7 @@ public class FakeHandShooter : CharacterBehaviour
         }
         else if (_heldProjectile.TryGetComponent<Rigidbody>(out var rigidbody))
         {
-            rigidbody.velocity = Vector3.zero;
+            rigidbody.linearVelocity = Vector3.zero;
             rigidbody.angularVelocity = Vector3.zero;
             rigidbody.useGravity = false;
             rigidbody.isKinematic = true;

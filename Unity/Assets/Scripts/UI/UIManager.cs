@@ -4,6 +4,7 @@ using UnityEngine;
 public class UIManager : MonoBehaviour
 {
     [SerializeField] private CanvasGroup m_HudCg;
+    [SerializeField] private CanvasGroup m_GameOverCg;
     [SerializeField] private float m_hudFadeLerpSpeed = 10f;
 
     private float _targetHudAlpha;
@@ -16,6 +17,7 @@ public class UIManager : MonoBehaviour
         }
 
         m_HudCg.alpha = 0f;
+        m_GameOverCg.alpha = 0f;
         _targetHudAlpha = 0f;
     }
 
@@ -51,6 +53,8 @@ public class UIManager : MonoBehaviour
     private void OnGameOver()
     {
         _targetHudAlpha = 0f;
+        
+        m_GameOverCg.alpha = 1f;
     }
 
     private void OnValidate()

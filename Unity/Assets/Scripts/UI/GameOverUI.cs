@@ -1,6 +1,8 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameOverUI : MonoBehaviour
 {
@@ -11,6 +13,8 @@ public class GameOverUI : MonoBehaviour
     [SerializeField] private float m_punchDuration = 0.2f;
     [SerializeField] private int m_punchVibrato = 2;
     [SerializeField] private float m_restartFadeDuration = 0.3f;
+
+    [Space] [SerializeField] private TMP_InputField nameInput;
 
     private Coroutine _punchRoutine;
     private Coroutine _restartButtonPunchRoutine;
@@ -179,5 +183,12 @@ public class GameOverUI : MonoBehaviour
         m_punchDuration = Mathf.Max(0.01f, m_punchDuration);
         m_punchVibrato = Mathf.Max(1, m_punchVibrato);
         m_restartFadeDuration = Mathf.Max(0.01f, m_restartFadeDuration);
+    }
+
+    public void SendScore()
+    {
+        var score = LevelManager.Instance.Score;
+        var playerName = nameInput.text;
+        APIManager.SendScore(score.Value, playerName);
     }
 }

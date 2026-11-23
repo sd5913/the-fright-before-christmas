@@ -17,7 +17,7 @@ public class UIManager : MonoBehaviour
         }
 
         m_HudCg.alpha = 0f;
-        m_GameOverCg.alpha = 0f;
+        m_GameOverCg.gameObject.SetActive(false);
         _targetHudAlpha = 0f;
     }
 
@@ -53,8 +53,7 @@ public class UIManager : MonoBehaviour
     private void OnGameOver()
     {
         _targetHudAlpha = 0f;
-        
-        m_GameOverCg.alpha = 1f;
+        m_GameOverCg.gameObject.SetActive(true);
     }
 
     private void OnValidate()

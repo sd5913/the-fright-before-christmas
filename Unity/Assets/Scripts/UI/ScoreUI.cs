@@ -28,6 +28,11 @@ public class ScoreUI : MonoBehaviour
     private void OnEnable()
     {
         FrameworkEventsFactory.Subscribe(GameEvent.GameReady, OnGameReady);
+
+        if (LevelManager.Instance)
+        {
+            OnScoreValueChanged(LevelManager.Instance.Score.Value);
+        }
     }
 
     private void OnDisable()

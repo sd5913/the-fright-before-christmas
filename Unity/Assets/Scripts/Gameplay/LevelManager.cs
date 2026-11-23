@@ -29,6 +29,8 @@ public class LevelManager : Singleton<LevelManager>
     private void OnDisable()
     {
         LootItem.OnLootCollected -= OnLootCollected;
+        FrameworkEventsFactory.Unraise(GameEvent.GameReady);
+        FrameworkEventsFactory.Unraise(GameEvent.GameOver);
     }
     
     private void OnLootCollected()

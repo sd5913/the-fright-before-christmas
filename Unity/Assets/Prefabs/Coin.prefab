@@ -112,5 +112,5 @@ MonoBehaviour:
   defaultVacuumLerpSpeed: 14
   defaultRotationLerpSpeed: 16
   defaultShrinkLerpSpeed: 10
-  defaultMaxCollectDuration: 0.25
-  collectCompleteDistance: 0.06
+  defaultMaxCollectDuration: 0.2
+  collectCompleteDistance: 0.3

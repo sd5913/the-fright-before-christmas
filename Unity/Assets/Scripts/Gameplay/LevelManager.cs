@@ -33,7 +33,6 @@ public class LevelManager : Singleton<LevelManager>
     private void OnLootCollected()
     {
         Score.Value++;
-        this.Log($"Loot collected, score: {Score}");
     }
 
     public void SetGameReady(bool value)

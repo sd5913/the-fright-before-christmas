@@ -187,6 +187,21 @@ public class GameOverUI : MonoBehaviour
 
     public void SendScore()
     {
+        // To do
+        // Punch send score button
+        // Add a text below the button displaying "sending..." or "failed/success!"
+        // Make send score button interactable if the score has already been sent successfully
+        // Or if the input field text does not contain anything
+        
+        // Add player hit sfx
+        // Add enemy hit sfx
+        // Add enemy freeze sfx
+        // Add throw sfx
+        // Add vacuum sfx
+        // Add loot pickup sfx
+        // Add game over stinger
+        // Add button click sfx
+        
         var score = LevelManager.Instance.Score;
         var playerName = nameInput.text;
         APIManager.SendScore(score.Value, playerName);

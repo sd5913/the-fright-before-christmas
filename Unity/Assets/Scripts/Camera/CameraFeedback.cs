@@ -128,7 +128,7 @@ public class CameraFeedback : Singleton<CameraFeedback>
             UpdateIntro();
             return;
         }
-
+        
         SignalGameReady();
         UpdateLogoFadeOut();
         UpdateFollowX();

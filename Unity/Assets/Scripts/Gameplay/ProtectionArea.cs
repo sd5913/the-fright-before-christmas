@@ -52,7 +52,13 @@ public class ProtectionArea : MonoBehaviour
             return;
         }
 
-        var damage = damagePerEnemyPerTick * _enemiesInside.Count;
+        var activeDamagingEnemies = CountDamagingEnemies();
+        if (activeDamagingEnemies <= 0)
+        {
+            return;
+        }
+
+        var damage = damagePerEnemyPerTick * activeDamagingEnemies;
         ApplyDamage(damage);
         _nextDamageTime = Time.time + damageInterval;
     }
@@ -150,6 +156,28 @@ public class ProtectionArea : MonoBehaviour
     }
 
     private readonly List<GameEnemy> _tempEnemiesToRemove = new List<GameEnemy>();
+
+    private int CountDamagingEnemies()
+    {
+        var count = 0;
+        foreach (var enemy in _enemiesInside)
+        {
+            if (enemy == null)
+            {
+                continue;
+            }
+
+            var freezable = enemy.GetComponent<Freezable>();
+            if (freezable != null && freezable.IsFreezed)
+            {
+                continue;
+            }
+
+            count++;
+        }
+
+        return count;
+    }
 
     private void TriggerDamageFlash()
     {

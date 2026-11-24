@@ -153,6 +153,7 @@ MonoBehaviour:
   addRandomTorqueImpulse: 0
   randomTorqueImpulse: 0.2
   destroyAfterSeconds: 6
+  hitSound: {fileID: 11400000, guid: fd044534853e51d4db6c790d9b097492, type: 2}
 --- !u!114 &3578400657413066179
 MonoBehaviour:
   m_ObjectHideFlags: 0

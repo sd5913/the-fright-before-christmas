@@ -186,6 +186,7 @@ MonoBehaviour:
   damageFlashColor: {r: 1, g: 0, b: 0, a: 1}
   damageFlashDuration: 0.2
   damageFlashRenderers: []
+  onDamageSound: {fileID: 11400000, guid: fd044534853e51d4db6c790d9b097492, type: 2}
 --- !u!114 &-1022574005178071545
 MonoBehaviour:
   m_ObjectHideFlags: 0

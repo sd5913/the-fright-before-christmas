@@ -7,18 +7,23 @@ using UnityEngine.UI;
 public class GameOverUI : MonoBehaviour
 {
     [SerializeField] private CanvasGroup m_cg;
+    [SerializeField] private Image m_fadeImage;
     [SerializeField] private Transform m_punchTarget;
     [SerializeField] private Transform m_restartButtonPunchTarget;
     [SerializeField] private float m_punchAmount = 0.18f;
     [SerializeField] private float m_punchDuration = 0.2f;
     [SerializeField] private int m_punchVibrato = 2;
     [SerializeField] private float m_restartFadeDuration = 0.3f;
+    [SerializeField] private float m_imageFadeDelay = 0f;
+    [SerializeField] private float m_imageFadeDuration = 0.35f;
+    [SerializeField, Range(0f, 1f)] private float m_imageTargetAlpha = 0.6f;
 
     [Space] [SerializeField] private TMP_InputField nameInput;
 
     private Coroutine _punchRoutine;
     private Coroutine _restartButtonPunchRoutine;
     private Coroutine _restartRoutine;
+    private Coroutine _imageFadeRoutine;
     private Vector3 _baseScale = Vector3.one;
     private Vector3 _restartButtonBaseScale = Vector3.one;
     private bool _isRestarting;
@@ -44,6 +49,19 @@ public class GameOverUI : MonoBehaviour
             m_cg.alpha = 1f;
             m_cg.interactable = true;
             m_cg.blocksRaycasts = true;
+        }
+
+        if (m_fadeImage != null)
+        {
+            if (_imageFadeRoutine != null)
+            {
+                StopCoroutine(_imageFadeRoutine);
+            }
+
+            var color = m_fadeImage.color;
+            color.a = 0f;
+            m_fadeImage.color = color;
+            _imageFadeRoutine = StartCoroutine(FadeImageToTargetAlpha());
         }
 
         if (_punchRoutine != null)
@@ -72,6 +90,12 @@ public class GameOverUI : MonoBehaviour
         {
             StopCoroutine(_restartRoutine);
             _restartRoutine = null;
+        }
+
+        if (_imageFadeRoutine != null)
+        {
+            StopCoroutine(_imageFadeRoutine);
+            _imageFadeRoutine = null;
         }
 
         var target = m_punchTarget != null ? m_punchTarget : transform;
@@ -110,6 +134,47 @@ public class GameOverUI : MonoBehaviour
         }
 
         _restartRoutine = StartCoroutine(RestartRoutine());
+    }
+
+    private IEnumerator FadeImageToTargetAlpha()
+    {
+        if (m_fadeImage == null)
+        {
+            _imageFadeRoutine = null;
+            yield break;
+        }
+
+        var delay = Mathf.Max(0f, m_imageFadeDelay);
+        if (delay > 0f)
+        {
+            var delayElapsed = 0f;
+            while (delayElapsed < delay)
+            {
+                delayElapsed += Time.unscaledDeltaTime;
+                yield return null;
+            }
+        }
+
+        var elapsed = 0f;
+        var duration = Mathf.Max(0.01f, m_imageFadeDuration);
+        var startColor = m_fadeImage.color;
+        startColor.a = 0f;
+        var targetAlpha = Mathf.Clamp01(m_imageTargetAlpha);
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            var t = Mathf.Clamp01(elapsed / duration);
+            var color = startColor;
+            color.a = Mathf.Lerp(0f, targetAlpha, t);
+            m_fadeImage.color = color;
+            yield return null;
+        }
+
+        var finalColor = m_fadeImage.color;
+        finalColor.a = targetAlpha;
+        m_fadeImage.color = finalColor;
+        _imageFadeRoutine = null;
     }
 
     private IEnumerator RestartRoutine()
@@ -188,10 +253,15 @@ public class GameOverUI : MonoBehaviour
         m_punchDuration = Mathf.Max(0.01f, m_punchDuration);
         m_punchVibrato = Mathf.Max(1, m_punchVibrato);
         m_restartFadeDuration = Mathf.Max(0.01f, m_restartFadeDuration);
+        m_imageFadeDelay = Mathf.Max(0f, m_imageFadeDelay);
+        m_imageFadeDuration = Mathf.Max(0.01f, m_imageFadeDuration);
+        m_imageTargetAlpha = Mathf.Clamp01(m_imageTargetAlpha);
     }
 
     public void SendScore()
     {
+        //3
+            
         // To do
         // Punch send score button
         // Add a text below the button displaying "sending..." or "failed/success!"

@@ -1711,7 +1711,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 292833869}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -1792,7 +1792,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.21568628}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5262,12 +5262,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameOverUI
   m_cg: {fileID: 1305076308}
+  m_fadeImage: {fileID: 297792774}
   m_punchTarget: {fileID: 1305076307}
   m_restartButtonPunchTarget: {fileID: 476292972}
   m_punchAmount: 0.18
   m_punchDuration: 0.2
   m_punchVibrato: 2
   m_restartFadeDuration: 0.3
+  m_imageFadeDelay: 1.5
+  m_imageFadeDuration: 2
+  m_imageTargetAlpha: 0.215
   nameInput: {fileID: 1877818520}
 --- !u!1 &1306860055
 GameObject:

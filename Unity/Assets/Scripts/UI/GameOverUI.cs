@@ -272,8 +272,6 @@ public class GameOverUI : MonoBehaviour
         // Or if the input field text does not contain anything
         
         // Add vacuum sfx
-        // Add game over stinger
-        // Add button click sfx
         
         var score = LevelManager.Instance.Score;
         var playerName = nameInput.text;

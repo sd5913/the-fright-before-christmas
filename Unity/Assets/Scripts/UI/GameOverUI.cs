@@ -268,10 +268,6 @@ public class GameOverUI : MonoBehaviour
         // Make send score button interactable if the score has already been sent successfully
         // Or if the input field text does not contain anything
         
-        // Add player hit sfx
-        // Add enemy hit sfx
-        // Add enemy freeze sfx
-        // Add throw sfx
         // Add vacuum sfx
         // Add loot pickup sfx
         // Add game over stinger

@@ -17,6 +17,7 @@ public class GameOverUI : MonoBehaviour
     [SerializeField] private float m_imageFadeDelay = 0f;
     [SerializeField] private float m_imageFadeDuration = 0.35f;
     [SerializeField, Range(0f, 1f)] private float m_imageTargetAlpha = 0.6f;
+    [SerializeField] private AudioPoolSound m_buttonClickSound;
 
     [Space] [SerializeField] private TMP_InputField nameInput;
 
@@ -110,6 +111,8 @@ public class GameOverUI : MonoBehaviour
 
     public void Restart()
     {
+        PlayButtonClickSound();
+
         if (_isRestarting)
         {
             return;
@@ -260,7 +263,7 @@ public class GameOverUI : MonoBehaviour
 
     public void SendScore()
     {
-        //3
+        PlayButtonClickSound();
             
         // To do
         // Punch send score button
@@ -269,12 +272,21 @@ public class GameOverUI : MonoBehaviour
         // Or if the input field text does not contain anything
         
         // Add vacuum sfx
-        // Add loot pickup sfx
         // Add game over stinger
         // Add button click sfx
         
         var score = LevelManager.Instance.Score;
         var playerName = nameInput.text;
         APIManager.SendScore(score.Value, playerName);
+    }
+
+    private void PlayButtonClickSound()
+    {
+        if (m_buttonClickSound == null || AudioPool.Instance == null)
+        {
+            return;
+        }
+
+        AudioPool.Instance.play(m_buttonClickSound);
     }
 }

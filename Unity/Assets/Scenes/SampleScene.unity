@@ -5275,6 +5275,7 @@ MonoBehaviour:
   m_imageFadeDelay: 1.5
   m_imageFadeDuration: 2
   m_imageTargetAlpha: 0.215
+  m_buttonClickSound: {fileID: 11400000, guid: 2742646fa26fd454aa80ef6cdf52f5a5, type: 2}
   nameInput: {fileID: 1877818520}
 --- !u!1 &1306860055
 GameObject:

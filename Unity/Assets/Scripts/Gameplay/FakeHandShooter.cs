@@ -30,6 +30,9 @@ public class FakeHandShooter : CharacterBehaviour
     [SerializeField] private float punchAmount = 0.2f;
     [SerializeField] private float punchDuration = 0.2f;
     [SerializeField] private int punchVibrato = 2;
+    
+    [Header("Audio")]
+    [SerializeField] private AudioPoolSound throwProjectileSound;
 
     private float _nextFireTime;
     private GameObject _heldProjectile;
@@ -138,6 +141,11 @@ public class FakeHandShooter : CharacterBehaviour
             rigidbody.isKinematic = false;
             rigidbody.useGravity = true;
             rigidbody.linearVelocity = initialVelocity;
+        }
+
+        if (throwProjectileSound != null && AudioPool.Instance != null)
+        {
+            AudioPool.Instance.play(throwProjectileSound);
         }
 
         _nextFireTime = Time.time + fireRate;

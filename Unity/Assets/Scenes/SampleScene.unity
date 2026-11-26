@@ -5271,6 +5271,7 @@ MonoBehaviour:
   m_fadeImage: {fileID: 297792774}
   m_punchTarget: {fileID: 1305076307}
   m_restartButtonPunchTarget: {fileID: 476292972}
+  m_submitScoreButtonPunchTarget: {fileID: 997032591}
   m_punchAmount: 0.18
   m_punchDuration: 0.2
   m_punchVibrato: 2

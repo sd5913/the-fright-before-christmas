@@ -10,6 +10,7 @@ public class GameOverUI : MonoBehaviour
     [SerializeField] private Image m_fadeImage;
     [SerializeField] private Transform m_punchTarget;
     [SerializeField] private Transform m_restartButtonPunchTarget;
+    [SerializeField] private Transform m_submitScoreButtonPunchTarget;
     [SerializeField] private float m_punchAmount = 0.18f;
     [SerializeField] private float m_punchDuration = 0.2f;
     [SerializeField] private int m_punchVibrato = 2;
@@ -29,12 +30,14 @@ public class GameOverUI : MonoBehaviour
 
     private Coroutine _punchRoutine;
     private Coroutine _restartButtonPunchRoutine;
+    private Coroutine _submitButtonPunchRoutine;
     private Coroutine _restartRoutine;
     private Coroutine _imageFadeRoutine;
     private Coroutine _feedbackRoutine;
     private Coroutine _feedbackPunchRoutine;
     private Vector3 _baseScale = Vector3.one;
     private Vector3 _restartButtonBaseScale = Vector3.one;
+    private Vector3 _submitButtonBaseScale = Vector3.one;
     private Vector3 _feedbackBaseScale = Vector3.one;
     private bool _isRestarting;
 
@@ -47,6 +50,12 @@ public class GameOverUI : MonoBehaviour
         if (restartTarget != null)
         {
             _restartButtonBaseScale = restartTarget.localScale;
+        }
+
+        var submitTarget = GetSubmitButtonTarget();
+        if (submitTarget != null)
+        {
+            _submitButtonBaseScale = submitTarget.localScale;
         }
 
         EnsureFeedbackText();
@@ -108,6 +117,12 @@ public class GameOverUI : MonoBehaviour
             _restartButtonPunchRoutine = null;
         }
 
+        if (_submitButtonPunchRoutine != null)
+        {
+            StopCoroutine(_submitButtonPunchRoutine);
+            _submitButtonPunchRoutine = null;
+        }
+
         if (_restartRoutine != null)
         {
             StopCoroutine(_restartRoutine);
@@ -139,6 +154,12 @@ public class GameOverUI : MonoBehaviour
         if (restartTarget != null)
         {
             restartTarget.localScale = _restartButtonBaseScale;
+        }
+
+        var submitTarget = GetSubmitButtonTarget();
+        if (submitTarget != null)
+        {
+            submitTarget.localScale = _submitButtonBaseScale;
         }
 
         if (sendFeedbackText != null)
@@ -294,6 +315,16 @@ public class GameOverUI : MonoBehaviour
         return m_punchTarget != null ? m_punchTarget : transform;
     }
 
+    private Transform GetSubmitButtonTarget()
+    {
+        if (m_submitScoreButtonPunchTarget != null)
+        {
+            return m_submitScoreButtonPunchTarget;
+        }
+
+        return m_punchTarget != null ? m_punchTarget : transform;
+    }
+
     private void OnValidate()
     {
         m_punchAmount = Mathf.Max(0f, m_punchAmount);
@@ -313,6 +344,17 @@ public class GameOverUI : MonoBehaviour
     public void SendScore()
     {
         PlayButtonClickSound();
+
+        var submitTarget = GetSubmitButtonTarget();
+        if (submitTarget != null)
+        {
+            if (_submitButtonPunchRoutine != null)
+            {
+                StopCoroutine(_submitButtonPunchRoutine);
+            }
+
+            _submitButtonPunchRoutine = StartCoroutine(PunchScaleRoutine(submitTarget, _submitButtonBaseScale, () => _submitButtonPunchRoutine = null));
+        }
 
         var score = LevelManager.Instance.Score;
         var playerName = nameInput.text;

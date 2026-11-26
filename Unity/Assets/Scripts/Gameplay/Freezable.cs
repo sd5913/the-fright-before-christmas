@@ -15,6 +15,7 @@ public class Freezable : MonoBehaviour
     [SerializeField] private float icePunchDuration = 0.18f;
     [SerializeField] private float autoUnfreezeDelay = 3f;
     [SerializeField] private float hitShakeIntensity = 1f;
+    [SerializeField] private AudioPoolSound onFreezeSound;
 
     private Coroutine _animSpeedRoutine;
     private Coroutine _icePunchRoutine;
@@ -58,8 +59,14 @@ public class Freezable : MonoBehaviour
     [DarkButton]
     public void Freeze()
     {
+        var wasFreezed = IsFreezed;
         IsFreezed = true;
         StartAutoUnfreezeTimer();
+
+        if (!wasFreezed && onFreezeSound != null && AudioPool.Instance != null)
+        {
+            AudioPool.Instance.play(onFreezeSound);
+        }
         
         if (iceCube != null)
         {

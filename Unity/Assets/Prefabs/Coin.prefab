@@ -112,5 +112,6 @@ MonoBehaviour:
   defaultVacuumLerpSpeed: 14
   defaultRotationLerpSpeed: 16
   defaultShrinkLerpSpeed: 10
-  defaultMaxCollectDuration: 0.2
-  collectCompleteDistance: 0.3
+  defaultMaxCollectDuration: 0.07
+  collectCompleteDistance: 1.1
+  onCollectedSound: {fileID: 11400000, guid: b5a839089c996894e90c351d945a375f, type: 2}

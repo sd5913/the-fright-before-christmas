@@ -168,6 +168,7 @@ MonoBehaviour:
   icePunchDuration: 0.18
   autoUnfreezeDelay: 6
   hitShakeIntensity: 1
+  onFreezeSound: {fileID: 11400000, guid: 7ac411d9a7233004ab48eb217b1022bf, type: 2}
 --- !u!114 &1851897368086850706
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -186,6 +187,7 @@ MonoBehaviour:
   damageFlashColor: {r: 1, g: 0, b: 0, a: 1}
   damageFlashDuration: 0.2
   damageFlashRenderers: []
+  onDamageSound: {fileID: 11400000, guid: fd044534853e51d4db6c790d9b097492, type: 2}
 --- !u!114 &-1022574005178071545
 MonoBehaviour:
   m_ObjectHideFlags: 0

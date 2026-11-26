@@ -12,6 +12,7 @@ public class LootItem : MonoBehaviour
     [SerializeField] private float defaultShrinkLerpSpeed = 10f;
     [SerializeField] private float defaultMaxCollectDuration = 0.5f;
     [SerializeField] private float collectCompleteDistance = 0.06f;
+    [SerializeField] private AudioPoolSound onCollectedSound;
 
     private Transform _collectorTarget;
     private bool _isBeingCollected;
@@ -20,6 +21,7 @@ public class LootItem : MonoBehaviour
     private float _shrinkLerpSpeed;
     private float _maxCollectDuration;
     private float _collectElapsed;
+    private bool _collectionResolved;
 
     public static Action OnLootCollected;
 
@@ -36,6 +38,11 @@ public class LootItem : MonoBehaviour
     private void Update()
     {
         if (!_isBeingCollected || _collectorTarget == null)
+        {
+            return;
+        }
+
+        if (_collectionResolved)
         {
             return;
         }
@@ -59,6 +66,12 @@ public class LootItem : MonoBehaviour
         if (Vector3.Distance(transform.position, targetPosition) <= collectCompleteDistance
             || _collectElapsed >= _maxCollectDuration || transform.localScale == Vector3.zero)
         {
+            _collectionResolved = true;
+            if (onCollectedSound != null && AudioPool.Instance != null)
+            {
+                AudioPool.Instance.play(onCollectedSound);
+            }
+
             OnLootCollected?.Invoke();
             Destroy(gameObject);
         }
@@ -83,6 +96,7 @@ public class LootItem : MonoBehaviour
         _shrinkLerpSpeed = Mathf.Max(0.01f, shrinkLerpSpeed > 0f ? shrinkLerpSpeed : defaultShrinkLerpSpeed);
         _maxCollectDuration = Mathf.Max(0.05f, maxCollectDuration > 0f ? maxCollectDuration : defaultMaxCollectDuration);
         _collectElapsed = 0f;
+        _collectionResolved = false;
         SetPhysicsActive(false);
         return true;
     }

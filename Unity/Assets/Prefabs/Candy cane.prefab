@@ -157,6 +157,7 @@ MonoBehaviour:
   addRandomTorqueImpulse: 1
   randomTorqueImpulse: 0.2
   destroyAfterSeconds: 6
+  hitSound: {fileID: 11400000, guid: fd044534853e51d4db6c790d9b097492, type: 2}
 --- !u!114 &-3748084778364390153
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -169,6 +170,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb2af3b44b2a33441aade04852725f66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Damager
+  <Damage>k__BackingField: 1
 --- !u!65 &7084243642657035953
 BoxCollider:
   m_ObjectHideFlags: 0

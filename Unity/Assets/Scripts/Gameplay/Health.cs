@@ -17,6 +17,9 @@ public class Health : MonoBehaviour
     [SerializeField] private Color damageFlashColor = Color.red;
     [SerializeField] private float damageFlashDuration = 0.2f;
     [SerializeField] private Renderer[] damageFlashRenderers;
+    
+    [Header("Audio")]
+    [SerializeField] private AudioPoolSound onDamageSound;
 
     private Coroutine _damageFlashRoutine;
     private MaterialPropertyBlock[] _damageFlashBlocks;
@@ -68,6 +71,11 @@ public class Health : MonoBehaviour
 
         currentHealth = Mathf.Max(0f, currentHealth - damage);
         TriggerDamageFlash();
+
+        if (onDamageSound != null && AudioPool.Instance != null)
+        {
+            AudioPool.Instance.play(onDamageSound);
+        }
 
         if (CameraFeedback.Instance != null && hitShakeIntensity > 0f)
         {

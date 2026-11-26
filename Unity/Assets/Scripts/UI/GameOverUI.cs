@@ -26,6 +26,9 @@ public class GameOverUI : MonoBehaviour
     [Space] [SerializeField] private TMP_InputField nameInput;
     [SerializeField] private TMP_Text sendFeedbackText;
     [SerializeField] private bool submitOnEnter = true;
+    [SerializeField] private Color sendingFeedbackColor = new Color(1f, 0.85f, 0.35f, 1f);
+    [SerializeField] private Color successFeedbackColor = new Color(0.45f, 1f, 0.45f, 1f);
+    [SerializeField] private Color failureFeedbackColor = new Color(1f, 0.45f, 0.45f, 1f);
     [SerializeField] private float feedbackFadeDuration = 0.18f;
     [SerializeField] private float feedbackVisibleDuration = 1.1f;
     [SerializeField] private float feedbackPunchAmount = 0.12f;
@@ -389,12 +392,12 @@ public class GameOverUI : MonoBehaviour
 
     private void OnSendScoreStarted()
     {
-        ShowFeedback("Sending...", new Color(1f, 0.85f, 0.35f, 1f), true);
+        ShowFeedback("Sending...", sendingFeedbackColor, true);
     }
 
     private void OnSendScoreCompleted(bool success, string message)
     {
-        var color = success ? new Color(0.45f, 1f, 0.45f, 1f) : new Color(1f, 0.45f, 0.45f, 1f);
+        var color = success ? successFeedbackColor : failureFeedbackColor;
         ShowFeedback(string.IsNullOrWhiteSpace(message) ? (success ? "Score submitted!" : "Failed to submit score.") : message, color, false);
     }
 

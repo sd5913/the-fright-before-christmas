@@ -55,7 +55,7 @@ public class ThrownProjectile : MonoBehaviour
         {
             _rigidbody.isKinematic = false;
             _rigidbody.useGravity = true;
-            _rigidbody.velocity = initialVelocity;
+            _rigidbody.linearVelocity = initialVelocity;
             if (applySpin)
             {
                 _rigidbody.angularVelocity = _currentSpinDegreesPerSecond * Mathf.Deg2Rad;
@@ -81,7 +81,7 @@ public class ThrownProjectile : MonoBehaviour
 
         if (_rigidbody != null)
         {
-            _rigidbody.velocity = Vector3.zero;
+            _rigidbody.linearVelocity = Vector3.zero;
             _rigidbody.angularVelocity = Vector3.zero;
             _rigidbody.useGravity = false;
             _rigidbody.isKinematic = true;
@@ -131,7 +131,7 @@ public class ThrownProjectile : MonoBehaviour
 
         if (alignToVelocity)
         {
-            var velocity = _rigidbody.velocity;
+            var velocity = _rigidbody.linearVelocity;
             if (velocity.sqrMagnitude > 0.0001f)
             {
                 _rigidbody.MoveRotation(Quaternion.LookRotation(velocity.normalized, Vector3.up));

@@ -30,9 +30,9 @@ public class FakeHandShooter : CharacterBehaviour
     [SerializeField] private float punchAmount = 0.2f;
     [SerializeField] private float punchDuration = 0.2f;
     [SerializeField] private int punchVibrato = 2;
-
-    [Header("Shoot Feedback")]
-    [SerializeField] private float shootShakeIntensity = 1f;
+    
+    [Header("Audio")]
+    [SerializeField] private AudioPoolSound throwProjectileSound;
 
     private float _nextFireTime;
     private GameObject _heldProjectile;
@@ -140,12 +140,12 @@ public class FakeHandShooter : CharacterBehaviour
         {
             rigidbody.isKinematic = false;
             rigidbody.useGravity = true;
-            rigidbody.velocity = initialVelocity;
+            rigidbody.linearVelocity = initialVelocity;
         }
 
-        if (CameraFeedback.Instance != null)
+        if (throwProjectileSound != null && AudioPool.Instance != null)
         {
-            CameraFeedback.Instance.PlayDefaultShake(shootShakeIntensity);
+            AudioPool.Instance.play(throwProjectileSound);
         }
 
         _nextFireTime = Time.time + fireRate;
@@ -162,7 +162,6 @@ public class FakeHandShooter : CharacterBehaviour
         punchAmount = Mathf.Max(0f, punchAmount);
         punchDuration = Mathf.Max(0.01f, punchDuration);
         punchVibrato = Mathf.Max(1, punchVibrato);
-        shootShakeIntensity = Mathf.Max(0f, shootShakeIntensity);
     }
 
     private void OnDisable()
@@ -198,7 +197,7 @@ public class FakeHandShooter : CharacterBehaviour
         }
         else if (_heldProjectile.TryGetComponent<Rigidbody>(out var rigidbody))
         {
-            rigidbody.velocity = Vector3.zero;
+            rigidbody.linearVelocity = Vector3.zero;
             rigidbody.angularVelocity = Vector3.zero;
             rigidbody.useGravity = false;
             rigidbody.isKinematic = true;

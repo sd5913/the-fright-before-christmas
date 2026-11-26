@@ -1,0 +1,248 @@
+using System.Collections;
+using UnityEngine;
+
+public class Freezable : MonoBehaviour
+{
+    public bool IsFreezed { get; private set; }
+
+    [SerializeField] private Transform iceCube;
+    [SerializeField] private Animator animator;
+    [SerializeField] private float freezeRampDuration = 0.25f;
+    [SerializeField] private float unfreezeRampDuration = 0.25f;
+    [SerializeField] private float frozenAnimatorSpeed = 0f;
+    [SerializeField] private float normalAnimatorSpeed = 1f;
+    [SerializeField] private float icePunchScaleMultiplier = 1.15f;
+    [SerializeField] private float icePunchDuration = 0.18f;
+    [SerializeField] private float autoUnfreezeDelay = 3f;
+    [SerializeField] private float hitShakeIntensity = 1f;
+    [SerializeField] private AudioPoolSound onFreezeSound;
+
+    private Coroutine _animSpeedRoutine;
+    private Coroutine _icePunchRoutine;
+    private Coroutine _autoUnfreezeRoutine;
+    private Vector3 _iceBaseScale = Vector3.one;
+
+    private void Awake()
+    {
+        if (iceCube != null)
+        {
+            _iceBaseScale = iceCube.localScale;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other == null)
+        {
+            return;
+        }
+
+        var freezer = other.GetComponent<Freezer>() ?? other.GetComponentInParent<Freezer>();
+        if (freezer == null || freezer.gameObject == gameObject)
+        {
+            return;
+        }
+
+        if (CameraFeedback.Instance != null && hitShakeIntensity > 0f)
+        {
+            CameraFeedback.Instance.PlayDefaultShake(hitShakeIntensity);
+        }
+
+        Destroy(freezer.gameObject);
+
+        if (!IsFreezed)
+        {
+            Freeze();
+        }
+    }
+    
+    [DarkButton]
+    public void Freeze()
+    {
+        var wasFreezed = IsFreezed;
+        IsFreezed = true;
+        StartAutoUnfreezeTimer();
+
+        if (!wasFreezed && onFreezeSound != null && AudioPool.Instance != null)
+        {
+            AudioPool.Instance.play(onFreezeSound);
+        }
+        
+        if (iceCube != null)
+        {
+            if (!iceCube.gameObject.activeSelf)
+            {
+                iceCube.localScale = _iceBaseScale;
+            }
+
+            iceCube.gameObject.SetActive(true);
+            StartIcePunch(deactivateAtEnd: false);
+        }
+
+        StartAnimatorSpeedRamp(frozenAnimatorSpeed, freezeRampDuration);
+    }
+
+    [DarkButton]
+    public void Unfreeze()
+    {
+        if (!IsFreezed)
+        {
+            return;
+        }
+
+        IsFreezed = false;
+        StopAutoUnfreezeTimer();
+        
+        StartAnimatorSpeedRamp(normalAnimatorSpeed, unfreezeRampDuration);
+
+        if (iceCube != null && iceCube.gameObject.activeSelf)
+        {
+            StartIcePunch(deactivateAtEnd: true);
+        }
+    }
+
+    private void StartAnimatorSpeedRamp(float targetSpeed, float duration)
+    {
+        if (animator == null)
+        {
+            return;
+        }
+
+        if (_animSpeedRoutine != null)
+        {
+            StopCoroutine(_animSpeedRoutine);
+        }
+
+        _animSpeedRoutine = StartCoroutine(AnimateAnimatorSpeed(targetSpeed, duration));
+    }
+
+    private IEnumerator AnimateAnimatorSpeed(float targetSpeed, float duration)
+    {
+        var startSpeed = animator.speed;
+        var elapsed = 0f;
+        var clampedDuration = Mathf.Max(0f, duration);
+
+        if (clampedDuration <= Mathf.Epsilon)
+        {
+            animator.speed = targetSpeed;
+            _animSpeedRoutine = null;
+            yield break;
+        }
+
+        while (elapsed < clampedDuration)
+        {
+            elapsed += Time.deltaTime;
+            var t = Mathf.Clamp01(elapsed / clampedDuration);
+            t = t * t * (3f - 2f * t);
+            animator.speed = Mathf.Lerp(startSpeed, targetSpeed, t);
+            yield return null;
+        }
+
+        animator.speed = targetSpeed;
+        _animSpeedRoutine = null;
+    }
+
+    private void StartIcePunch(bool deactivateAtEnd)
+    {
+        if (_icePunchRoutine != null)
+        {
+            StopCoroutine(_icePunchRoutine);
+        }
+
+        _icePunchRoutine = StartCoroutine(AnimateIcePunch(deactivateAtEnd));
+    }
+
+    private IEnumerator AnimateIcePunch(bool deactivateAtEnd)
+    {
+        if (iceCube == null)
+        {
+            _icePunchRoutine = null;
+            yield break;
+        }
+
+        var elapsed = 0f;
+        var duration = Mathf.Max(0.01f, icePunchDuration);
+        var peakScale = _iceBaseScale * Mathf.Max(1f, icePunchScaleMultiplier);
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            var t = Mathf.Clamp01(elapsed / duration);
+            var pulse = t < 0.5f
+                ? Mathf.Lerp(0f, 1f, t * 2f)
+                : Mathf.Lerp(1f, 0f, (t - 0.5f) * 2f);
+            iceCube.localScale = Vector3.Lerp(_iceBaseScale, peakScale, pulse);
+            yield return null;
+        }
+
+        iceCube.localScale = _iceBaseScale;
+
+        if (deactivateAtEnd)
+        {
+            iceCube.gameObject.SetActive(false);
+        }
+
+        _icePunchRoutine = null;
+    }
+
+    private void OnDisable()
+    {
+        StopAutoUnfreezeTimer();
+
+        if (_animSpeedRoutine != null)
+        {
+            StopCoroutine(_animSpeedRoutine);
+            _animSpeedRoutine = null;
+        }
+
+        if (_icePunchRoutine != null)
+        {
+            StopCoroutine(_icePunchRoutine);
+            _icePunchRoutine = null;
+        }
+    }
+
+    private void StartAutoUnfreezeTimer()
+    {
+        StopAutoUnfreezeTimer();
+
+        if (autoUnfreezeDelay <= 0f)
+        {
+            return;
+        }
+
+        _autoUnfreezeRoutine = StartCoroutine(AutoUnfreezeAfterDelay());
+    }
+
+    private void StopAutoUnfreezeTimer()
+    {
+        if (_autoUnfreezeRoutine == null)
+        {
+            return;
+        }
+
+        StopCoroutine(_autoUnfreezeRoutine);
+        _autoUnfreezeRoutine = null;
+    }
+
+    private IEnumerator AutoUnfreezeAfterDelay()
+    {
+        yield return new WaitForSeconds(autoUnfreezeDelay);
+        _autoUnfreezeRoutine = null;
+
+        if (IsFreezed)
+        {
+            Unfreeze();
+        }
+    }
+
+    private void OnValidate()
+    {
+        freezeRampDuration = Mathf.Max(0f, freezeRampDuration);
+        unfreezeRampDuration = Mathf.Max(0f, unfreezeRampDuration);
+        autoUnfreezeDelay = Mathf.Max(0f, autoUnfreezeDelay);
+        icePunchDuration = Mathf.Max(0.01f, icePunchDuration);
+        icePunchScaleMultiplier = Mathf.Max(1f, icePunchScaleMultiplier);
+        hitShakeIntensity = Mathf.Max(0f, hitShakeIntensity);
+    }
+}

@@ -66,7 +66,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 63bf960b0155a1140b0eecd49e2e3d96, type: 3}
       propertyPath: m_Name
-      value: untitled
+      value: Candy cane
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -81,6 +81,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 63bf960b0155a1140b0eecd49e2e3d96, type: 3}
       insertIndex: -1
       addedObject: {fileID: -8002036988166322091}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 63bf960b0155a1140b0eecd49e2e3d96, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -3748084778364390153}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 63bf960b0155a1140b0eecd49e2e3d96, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7084243642657035953}
   m_SourcePrefab: {fileID: 100100000, guid: 63bf960b0155a1140b0eecd49e2e3d96, type: 3}
 --- !u!1 &6813212265894234542 stripped
 GameObject:
@@ -151,3 +157,38 @@ MonoBehaviour:
   addRandomTorqueImpulse: 1
   randomTorqueImpulse: 0.2
   destroyAfterSeconds: 6
+  hitSound: {fileID: 11400000, guid: fd044534853e51d4db6c790d9b097492, type: 2}
+--- !u!114 &-3748084778364390153
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6813212265894234542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb2af3b44b2a33441aade04852725f66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Damager
+  <Damage>k__BackingField: 1
+--- !u!65 &7084243642657035953
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6813212265894234542}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.040899288, y: 0.027861955, z: 0.016484715}
+  m_Center: {x: -0.0067812754, y: -0.0004011883, z: 0.0005378507}

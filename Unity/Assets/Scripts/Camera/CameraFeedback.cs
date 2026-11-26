@@ -40,6 +40,11 @@ public class CameraFeedback : Singleton<CameraFeedback>
     [SerializeField] private float introLogoFadeDelay = 0f;
     [SerializeField] private float introLogoFadeDuration = 0.5f;
 
+    [Header("Game Over Outro")]
+    [SerializeField] private bool playGameOverOutro = true;
+    [SerializeField] private float gameOverReturnDuration = 1.5f;
+    [SerializeField] private AnimationCurve gameOverReturnEase = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
+
     private readonly List<ActiveShake> _activeShakes = new List<ActiveShake>();
     private Vector3 _lastPositionOffset;
     private Vector3 _lastRotationOffset;
@@ -48,9 +53,15 @@ public class CameraFeedback : Singleton<CameraFeedback>
     private float _introElapsed;
     private float _introDelayRemaining;
     private bool _introActive;
+    private bool _introCompletionSignaled;
     private bool _logoFadeActive;
     private float _logoFadeElapsed;
     private float _logoFadeStartAlpha;
+    private bool _gameOverOutroActive;
+    private bool _gameOverOutroStarted;
+    private Vector3 _gameOverOutroStartPosition;
+    private float _gameOverOutroElapsed;
+    private float _gameOverFadeStartAlpha;
 
     private void Start()
     {
@@ -60,11 +71,16 @@ public class CameraFeedback : Singleton<CameraFeedback>
         _introDelayRemaining = introStartDelay;
         _introActive = playIntroMovement && introLength > 0f && introDuration > 0f;
         UpdateIntroFadeAlpha(_introActive ? 1f : 0f);
+
+        if (!_introActive)
+        {
+            SignalGameReady();
+        }
     }
 
     public void PlayDefaultShake(float intensityScale = 1f)
     {
-        if (intensityScale <= 0f || _introActive)
+        if (intensityScale <= 0f || _introActive || _gameOverOutroActive || IsGameOver())
         {
             return;
         }
@@ -78,7 +94,7 @@ public class CameraFeedback : Singleton<CameraFeedback>
 
     public void Shake(float duration, float positionAmplitude, Vector3 rotationAmplitude, float frequency)
     {
-        if (duration <= 0f || frequency <= 0f || _introActive)
+        if (duration <= 0f || frequency <= 0f || _introActive || _gameOverOutroActive || IsGameOver())
         {
             return;
         }
@@ -101,12 +117,19 @@ public class CameraFeedback : Singleton<CameraFeedback>
     {
         RestorePreviousOffset();
 
+        if (IsGameOver())
+        {
+            UpdateGameOverOutro();
+            return;
+        }
+
         if (_introActive)
         {
             UpdateIntro();
             return;
         }
-
+        
+        SignalGameReady();
         UpdateLogoFadeOut();
         UpdateFollowX();
 
@@ -152,6 +175,53 @@ public class CameraFeedback : Singleton<CameraFeedback>
         _lastRotationOffset = rotationOffset;
     }
 
+    private bool IsGameOver()
+    {
+        return LevelManager.Instance != null && LevelManager.Instance.GameOver;
+    }
+
+    private void UpdateGameOverOutro()
+    {
+        if (!_gameOverOutroStarted)
+        {
+            _gameOverOutroStarted = true;
+            _gameOverOutroStartPosition = transform.position;
+            _gameOverOutroElapsed = 0f;
+            _gameOverFadeStartAlpha = GetIntroFadeAlpha();
+            _activeShakes.Clear();
+            _logoFadeActive = false;
+            _gameOverOutroActive = playGameOverOutro && gameOverReturnDuration > 0f;
+
+            if (!_gameOverOutroActive)
+            {
+                transform.position = _introStartPosition;
+                UpdateIntroFadeAlpha(1f);
+                return;
+            }
+        }
+
+        if (!_gameOverOutroActive)
+        {
+            transform.position = _introStartPosition;
+            UpdateIntroFadeAlpha(1f);
+            return;
+        }
+
+        var progress = Mathf.Clamp01(_gameOverOutroElapsed / gameOverReturnDuration);
+        var eased = gameOverReturnEase != null ? gameOverReturnEase.Evaluate(progress) : progress;
+        transform.position = Vector3.LerpUnclamped(_gameOverOutroStartPosition, _introStartPosition, eased);
+        UpdateIntroFadeAlpha(Mathf.Lerp(_gameOverFadeStartAlpha, 1f, progress));
+
+        if (progress >= 1f)
+        {
+            _gameOverOutroActive = false;
+            return;
+        }
+
+        var deltaTime = useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
+        _gameOverOutroElapsed += deltaTime;
+    }
+
     private void UpdateIntro()
     {
         if (_introDelayRemaining > 0f)
@@ -172,12 +242,26 @@ public class CameraFeedback : Singleton<CameraFeedback>
         {
             UpdateIntroFadeAlpha(0f);
             _introActive = false;
+            SignalGameReady();
             StartLogoFadeOut();
             return;
         }
 
         var deltaTime = useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
         _introElapsed += deltaTime;
+    }
+
+    private void SignalGameReady()
+    {
+        if (!_introCompletionSignaled)
+        {
+            _introCompletionSignaled = true;
+        }
+
+        if (LevelManager.Instance != null && !LevelManager.Instance.GameReady)
+        {
+            LevelManager.Instance.SetGameReady(true);
+        }
     }
 
     private void StartLogoFadeOut()
@@ -227,6 +311,16 @@ public class CameraFeedback : Singleton<CameraFeedback>
         var color = introFadeImage.color;
         color.a = Mathf.Clamp01(alpha);
         introFadeImage.color = color;
+    }
+
+    private float GetIntroFadeAlpha()
+    {
+        if (introFadeImage == null)
+        {
+            return 0f;
+        }
+
+        return introFadeImage.color.a;
     }
 
     private void UpdateFollowX()
@@ -282,5 +376,6 @@ public class CameraFeedback : Singleton<CameraFeedback>
         introDuration = Mathf.Max(0.01f, introDuration);
         introLogoFadeDelay = Mathf.Max(0f, introLogoFadeDelay);
         introLogoFadeDuration = Mathf.Max(0.01f, introLogoFadeDuration);
+        gameOverReturnDuration = Mathf.Max(0.01f, gameOverReturnDuration);
     }
 }

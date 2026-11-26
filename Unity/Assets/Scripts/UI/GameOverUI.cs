@@ -3,6 +3,9 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+#if ENABLE_INPUT_SYSTEM
+using UnityEngine.InputSystem;
+#endif
 
 public class GameOverUI : MonoBehaviour
 {
@@ -22,6 +25,7 @@ public class GameOverUI : MonoBehaviour
 
     [Space] [SerializeField] private TMP_InputField nameInput;
     [SerializeField] private TMP_Text sendFeedbackText;
+    [SerializeField] private bool submitOnEnter = true;
     [SerializeField] private float feedbackFadeDuration = 0.18f;
     [SerializeField] private float feedbackVisibleDuration = 1.1f;
     [SerializeField] private float feedbackPunchAmount = 0.12f;
@@ -40,6 +44,7 @@ public class GameOverUI : MonoBehaviour
     private Vector3 _submitButtonBaseScale = Vector3.one;
     private Vector3 _feedbackBaseScale = Vector3.one;
     private bool _isRestarting;
+    private int _lastSubmitFrame = -1;
 
     private void Awake()
     {
@@ -71,6 +76,7 @@ public class GameOverUI : MonoBehaviour
         _isRestarting = false;
         APIManager.OnSendScoreStarted += OnSendScoreStarted;
         APIManager.OnSendScoreCompleted += OnSendScoreCompleted;
+        RegisterInputFieldCallbacks();
 
         if (m_cg != null)
         {
@@ -104,6 +110,7 @@ public class GameOverUI : MonoBehaviour
     {
         APIManager.OnSendScoreStarted -= OnSendScoreStarted;
         APIManager.OnSendScoreCompleted -= OnSendScoreCompleted;
+        UnregisterInputFieldCallbacks();
 
         if (_punchRoutine != null)
         {
@@ -343,6 +350,12 @@ public class GameOverUI : MonoBehaviour
 
     public void SendScore()
     {
+        if (!CanSubmitThisFrame())
+        {
+            return;
+        }
+
+        _lastSubmitFrame = Time.frameCount;
         PlayButtonClickSound();
 
         var submitTarget = GetSubmitButtonTarget();
@@ -359,6 +372,19 @@ public class GameOverUI : MonoBehaviour
         var score = LevelManager.Instance.Score;
         var playerName = nameInput.text;
         APIManager.SendScore(score.Value, playerName);
+    }
+
+    private void Update()
+    {
+        if (!submitOnEnter || nameInput == null || !nameInput.isFocused)
+        {
+            return;
+        }
+
+        if (IsSubmitKeyPressedThisFrame())
+        {
+            SendScore();
+        }
     }
 
     private void OnSendScoreStarted()
@@ -500,5 +526,72 @@ public class GameOverUI : MonoBehaviour
         var c = color;
         c.a = Mathf.Clamp01(alpha);
         sendFeedbackText.color = c;
+    }
+
+    private void RegisterInputFieldCallbacks()
+    {
+        if (nameInput == null)
+        {
+            return;
+        }
+
+        nameInput.onSubmit.AddListener(OnNameInputSubmit);
+        nameInput.onEndEdit.AddListener(OnNameInputEndEdit);
+    }
+
+    private void UnregisterInputFieldCallbacks()
+    {
+        if (nameInput == null)
+        {
+            return;
+        }
+
+        nameInput.onSubmit.RemoveListener(OnNameInputSubmit);
+        nameInput.onEndEdit.RemoveListener(OnNameInputEndEdit);
+    }
+
+    private void OnNameInputSubmit(string _)
+    {
+        if (!submitOnEnter)
+        {
+            return;
+        }
+
+        SendScore();
+    }
+
+    private void OnNameInputEndEdit(string _)
+    {
+        if (!submitOnEnter || !nameInput.isFocused)
+        {
+            return;
+        }
+
+        if (IsSubmitKeyPressedThisFrame())
+        {
+            SendScore();
+        }
+    }
+
+    private bool CanSubmitThisFrame()
+    {
+        return _lastSubmitFrame != Time.frameCount;
+    }
+
+    private static bool IsSubmitKeyPressedThisFrame()
+    {
+#if ENABLE_INPUT_SYSTEM
+        var keyboard = Keyboard.current;
+        if (keyboard == null)
+        {
+            return false;
+        }
+
+        return keyboard.enterKey.wasPressedThisFrame || keyboard.numpadEnterKey.wasPressedThisFrame;
+#elif ENABLE_LEGACY_INPUT_MANAGER
+        return Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter);
+#else
+        return false;
+#endif
     }
 }

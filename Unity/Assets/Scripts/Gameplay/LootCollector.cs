@@ -9,10 +9,28 @@ public class LootCollector : CharacterBehaviour
     [SerializeField] private float shrinkLerpSpeed = 10f;
     [SerializeField] private float maxCollectDuration = 0.5f;
     [SerializeField] private bool onlyWhenFocused = true;
+    [Header("Vacuum Audio")]
+    [SerializeField] private AudioClip vacuumLoopClip;
+    [SerializeField] private AudioSource vacuumLoopSource;
+    [SerializeField] private float vacuumLoopVolume = 0.4f;
+    [SerializeField] private float vacuumLoopFadeInSpeed = 4f;
+    [SerializeField] private float vacuumLoopFadeOutSpeed = 6f;
+    [SerializeField, Range(0f, 1f)] private float vacuumLoopSpatialBlend = 0f;
+
     private readonly System.Collections.Generic.List<LootItem> _lootBuffer = new System.Collections.Generic.List<LootItem>(64);
+
+    private void Awake()
+    {
+        if (vacuumLoopClip != null)
+        {
+            EnsureVacuumAudioSource();
+        }
+    }
 
     protected override void OnUpdate(float deltaTime)
     {
+        UpdateVacuumLoop(deltaTime);
+
         if (onlyWhenFocused && (gameCharacter == null || !gameCharacter.IsFocused))
         {
             return;
@@ -66,6 +84,17 @@ public class LootCollector : CharacterBehaviour
         }
     }
 
+    private void OnDisable()
+    {
+        if (vacuumLoopSource == null)
+        {
+            return;
+        }
+
+        vacuumLoopSource.Stop();
+        vacuumLoopSource.volume = 0f;
+    }
+
     private void OnValidate()
     {
         collectRange = Mathf.Max(0.01f, collectRange);
@@ -74,6 +103,15 @@ public class LootCollector : CharacterBehaviour
         rotationLerpSpeed = Mathf.Max(0.01f, rotationLerpSpeed);
         shrinkLerpSpeed = Mathf.Max(0.01f, shrinkLerpSpeed);
         maxCollectDuration = Mathf.Max(0.05f, maxCollectDuration);
+        vacuumLoopVolume = Mathf.Clamp01(vacuumLoopVolume);
+        vacuumLoopFadeInSpeed = Mathf.Max(0.01f, vacuumLoopFadeInSpeed);
+        vacuumLoopFadeOutSpeed = Mathf.Max(0.01f, vacuumLoopFadeOutSpeed);
+        vacuumLoopSpatialBlend = Mathf.Clamp01(vacuumLoopSpatialBlend);
+
+        if (vacuumLoopSource != null)
+        {
+            ConfigureVacuumAudioSource(vacuumLoopSource);
+        }
     }
 
     private void OnDrawGizmosSelected()
@@ -86,5 +124,71 @@ public class LootCollector : CharacterBehaviour
         var right = Quaternion.AngleAxis(half, transform.up) * transform.forward;
         Gizmos.DrawRay(transform.position, left * collectRange);
         Gizmos.DrawRay(transform.position, right * collectRange);
+    }
+
+    private void UpdateVacuumLoop(float deltaTime)
+    {
+        if (vacuumLoopClip == null)
+        {
+            if (vacuumLoopSource != null && vacuumLoopSource.isPlaying)
+            {
+                vacuumLoopSource.Stop();
+                vacuumLoopSource.volume = 0f;
+            }
+
+            return;
+        }
+
+        var isFocused = gameCharacter != null && gameCharacter.IsFocused;
+        var targetVolume = isFocused ? vacuumLoopVolume : 0f;
+
+        EnsureVacuumAudioSource();
+        if (vacuumLoopSource == null)
+        {
+            return;
+        }
+
+        if (vacuumLoopSource.clip != vacuumLoopClip)
+        {
+            vacuumLoopSource.clip = vacuumLoopClip;
+        }
+
+        if (isFocused && !vacuumLoopSource.isPlaying)
+        {
+            vacuumLoopSource.volume = 0f;
+            vacuumLoopSource.Play();
+        }
+
+        var fadeSpeed = targetVolume > vacuumLoopSource.volume ? vacuumLoopFadeInSpeed : vacuumLoopFadeOutSpeed;
+        vacuumLoopSource.volume = Mathf.MoveTowards(vacuumLoopSource.volume, targetVolume, fadeSpeed * deltaTime);
+
+        if (!isFocused && vacuumLoopSource.isPlaying && vacuumLoopSource.volume <= 0.0001f)
+        {
+            vacuumLoopSource.Stop();
+        }
+    }
+
+    private void EnsureVacuumAudioSource()
+    {
+        if (vacuumLoopSource == null)
+        {
+            vacuumLoopSource = gameObject.AddComponent<AudioSource>();
+        }
+
+        ConfigureVacuumAudioSource(vacuumLoopSource);
+    }
+
+    private void ConfigureVacuumAudioSource(AudioSource source)
+    {
+        if (source == null)
+        {
+            return;
+        }
+
+        source.playOnAwake = false;
+        source.loop = true;
+        source.volume = Mathf.Clamp01(source.volume);
+        source.clip = vacuumLoopClip;
+        source.spatialBlend = vacuumLoopSpatialBlend;
     }
 }

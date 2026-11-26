@@ -23,9 +23,22 @@ public class APIManager : Singleton<APIManager>
         public int score;
     }
 
+    [Serializable]
+    private sealed class ApiErrorEnvelope
+    {
+        public ApiError error;
+    }
+
+    [Serializable]
+    private sealed class ApiError
+    {
+        public string code;
+        public string message;
+    }
+
     protected override void OnAwake()
     {
-        _sessionRunId = string.IsNullOrWhiteSpace(runId) ? Guid.NewGuid().ToString("N") : runId.Trim();
+        _sessionRunId = string.IsNullOrWhiteSpace(runId) ? Guid.NewGuid().ToString("D") : runId.Trim();
     }
 
     [DarkButton]
@@ -87,8 +100,13 @@ public class APIManager : Singleton<APIManager>
 
             if (request.result != UnityWebRequest.Result.Success)
             {
-                var errorMessage = $"Failed to send score ({(long)request.responseCode}).";
-                this.LogError($"{errorMessage} {request.error}");
+                var responseText = request.downloadHandler != null ? request.downloadHandler.text : string.Empty;
+                var backendMessage = ExtractBackendErrorMessage(responseText);
+                var errorMessage = string.IsNullOrWhiteSpace(backendMessage)
+                    ? $"Failed to send score ({(long)request.responseCode})."
+                    : $"Failed to send score ({(long)request.responseCode}): {backendMessage}";
+
+                this.LogError($"{errorMessage} UnityError={request.error} Response={responseText}");
                 OnSendScoreCompleted?.Invoke(false, errorMessage);
                 yield break;
             }
@@ -96,5 +114,21 @@ public class APIManager : Singleton<APIManager>
             this.Log($"Score sent. HTTP {(long)request.responseCode}");
             OnSendScoreCompleted?.Invoke(true, "Score submitted!");
         }
+    }
+
+    private static string ExtractBackendErrorMessage(string responseText)
+    {
+        if (string.IsNullOrWhiteSpace(responseText))
+        {
+            return string.Empty;
+        }
+
+        var envelope = JsonUtility.FromJson<ApiErrorEnvelope>(responseText);
+        if (envelope != null && envelope.error != null && !string.IsNullOrWhiteSpace(envelope.error.message))
+        {
+            return envelope.error.message.Trim();
+        }
+
+        return string.Empty;
     }
 }

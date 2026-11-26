@@ -1847,6 +1847,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13306385acca87744acb4c8342459b93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::APIManager
+  scoresEndpoint: https://metapool.cloud/tfbc-api/v1/scores
+  runId: 
 --- !u!4 &330487559
 Transform:
   m_ObjectHideFlags: 0
@@ -6420,7 +6422,7 @@ GameObject:
   - component: {fileID: 1877818521}
   - component: {fileID: 1877818520}
   m_Layer: 5
-  m_Name: InputField (TMP)
+  m_Name: Name Input
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

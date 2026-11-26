@@ -7,6 +7,9 @@ using UnityEngine.Networking;
 
 public class APIManager : Singleton<APIManager>
 {
+    public static event Action OnSendScoreStarted;
+    public static event Action<bool, string> OnSendScoreCompleted;
+
     [SerializeField] private string scoresEndpoint = "https://metapool.cloud/tfbc-api/v1/scores";
     [SerializeField] private string runId;
 
@@ -35,10 +38,13 @@ public class APIManager : Singleton<APIManager>
     {
         if (Instance == null)
         {
-            Debug.LogError("APIManager.SendScore called before APIManager instance exists.");
+            const string message = "API manager not available.";
+            Debug.LogError($"APIManager.SendScore failed: {message}");
+            OnSendScoreCompleted?.Invoke(false, message);
             return;
         }
 
+        OnSendScoreStarted?.Invoke();
         Instance.StartCoroutine(Instance.SendScoreRoutine(score, playerName));
     }
 
@@ -46,13 +52,17 @@ public class APIManager : Singleton<APIManager>
     {
         if (string.IsNullOrWhiteSpace(scoresEndpoint))
         {
-            this.LogError("Score endpoint is empty.");
+            const string message = "Score endpoint is empty.";
+            this.LogError(message);
+            OnSendScoreCompleted?.Invoke(false, message);
             yield break;
         }
 
         if (string.IsNullOrWhiteSpace(playerName))
         {
-            this.LogError("Player name is empty; score not sent.");
+            const string message = "Player name is required.";
+            this.LogError(message);
+            OnSendScoreCompleted?.Invoke(false, message);
             yield break;
         }
 
@@ -77,11 +87,14 @@ public class APIManager : Singleton<APIManager>
 
             if (request.result != UnityWebRequest.Result.Success)
             {
-                this.LogError($"Failed sending score. HTTP {(long)request.responseCode}: {request.error}");
+                var errorMessage = $"Failed to send score ({(long)request.responseCode}).";
+                this.LogError($"{errorMessage} {request.error}");
+                OnSendScoreCompleted?.Invoke(false, errorMessage);
                 yield break;
             }
 
             this.Log($"Score sent. HTTP {(long)request.responseCode}");
+            OnSendScoreCompleted?.Invoke(true, "Score submitted!");
         }
     }
 }
